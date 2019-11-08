@@ -17,9 +17,9 @@ namespace PatientRegistrationApp
         {
             try
             {
-                var excelApp = new Excel.Application();
-                excelApp.Visible = false;
-                Excel.Workbook m_existingWkBook = excelApp.Workbooks.Open("Patient Registration.xlsx");
+                var app = new Excel.Application();
+                app.Visible = false;
+                m_existingWkBook = app.Workbooks.Open("Patient Registration.xlsx");
                 InitializeComponent(); // initialize app
                 mb_initialized = true;
             }
@@ -56,14 +56,27 @@ namespace PatientRegistrationApp
                 try
                 {
                     // just open excel
-                    var excelApp = new Excel.Application();
-                    excelApp.Visible = true;
-                    excelApp.Workbooks.Open("Patient Registration.xlsx"); // this is apparently somewhat expensive
+                    m_existingWkBook.Application.Visible ^= true;
+                }
+                catch (InvalidCastException /*ex*/)
+                {
+                    try
+                    {
+                        var app = new Excel.Application();
+                        app.Visible = true;
+                        m_existingWkBook = app.Workbooks.Open("Patient Registration.xlsx");
+                    }
+                    catch (Exception ex)
+                    {
+                        // TODO: Show some dialog that says that it can't find excel/excel file
+                        Console.WriteLine(ex.ToString());
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
                     // TODO: Show some dialog that says that it can't find excel/excel file
+                    Console.WriteLine(ex.ToString());
                 }
             }
         }
