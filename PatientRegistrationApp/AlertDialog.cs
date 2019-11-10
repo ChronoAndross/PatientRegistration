@@ -15,6 +15,7 @@ namespace PatientRegistrationApp
         public AlertDialog(string inDialogText)
         {
             InitializeComponent();
+            textAlert.Text = inDialogText;
         }
 
         private void AlertDialog_Load(object sender, EventArgs e)
@@ -25,6 +26,11 @@ namespace PatientRegistrationApp
         private void btnConfirm_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

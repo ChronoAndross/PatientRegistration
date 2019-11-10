@@ -46,11 +46,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddPatientDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddPatientDialog.Designer.cs">
+      <DependentUpon>AddPatientDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="AlertDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AlertDialog.Designer.cs">
       <DependentUpon>AlertDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DeletePatientDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeletePatientDialog.Designer.cs">
+      <DependentUpon>DeletePatientDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -60,8 +72,14 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddPatientDialog.resx">
+      <DependentUpon>AddPatientDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AlertDialog.resx">
       <DependentUpon>AlertDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeletePatientDialog.resx">
+      <DependentUpon>DeletePatientDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

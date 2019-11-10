@@ -85,8 +85,8 @@ namespace PatientRegistrationApp
         {
             if (m_existingWkBook != null)
             {
-                // TODO: Spawn a dialog that has name/address/phone number fields.
-                // Then add this cell in the workbook
+                Form addPatientDialog = new AddPatientDialog(m_existingWkBook);
+                addPatientDialog.ShowDialog();
             }
         }
 
@@ -94,14 +94,22 @@ namespace PatientRegistrationApp
         {
             if (m_existingWkBook != null)
             {
-                // TODO: Spawn a dialog that provides a list of names from the Excel document to delete.
-                // The "Delete" button will delete them from the Excel document.
+                Form deletePatientDialog = new DeletePatientDialog(m_existingWkBook);
+                deletePatientDialog.ShowDialog();
             }
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            // TODO: Display About dialog, showing developers and other accolades.
+            string dialogText = "Written and designed by Andrew Gorbaty." 
+                 + "This software is distributed under an 'as-is' license, which allows any developer to modify its source code without permission from its original author.";
+            Form prompt = new AlertDialog(dialogText);
+            prompt.ShowDialog();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            m_existingWkBook.Close();
         }
 
         private bool mb_initialized = false;
