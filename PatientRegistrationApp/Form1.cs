@@ -39,13 +39,8 @@ namespace PatientRegistrationApp
         {
             if (m_existingWkBook != null)
             {
-                /* 
-                 * TODO: This command will do the following:
-                 * 1. Query all available return dates from the excel file.
-                 * 2. After date is selected, we query all patients associated with this return date.
-                 * 3. Take each row (assuming one patient per row) and format it in a new Word document using Mailmerge API.
-                 * 4. Open newly created document in Word.
-                */
+                Form mailMergeDialog = new MailMergeDialog(m_existingWkBook);
+                mailMergeDialog.ShowDialog();
             }
         }
 

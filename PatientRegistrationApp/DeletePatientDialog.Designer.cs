@@ -36,11 +36,11 @@
             // 
             // btnAccept
             // 
-            this.btnAccept.Location = new System.Drawing.Point(157, 300);
+            this.btnAccept.Location = new System.Drawing.Point(136, 300);
             this.btnAccept.Name = "btnAccept";
-            this.btnAccept.Size = new System.Drawing.Size(134, 69);
+            this.btnAccept.Size = new System.Drawing.Size(194, 69);
             this.btnAccept.TabIndex = 0;
-            this.btnAccept.Text = "OK";
+            this.btnAccept.Text = "Remove Patient";
             this.btnAccept.UseVisualStyleBackColor = true;
             this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 

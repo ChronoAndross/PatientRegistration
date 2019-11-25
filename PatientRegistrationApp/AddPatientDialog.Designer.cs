@@ -54,9 +54,9 @@
             // 
             this.btnAccept.Location = new System.Drawing.Point(166, 407);
             this.btnAccept.Name = "btnAccept";
-            this.btnAccept.Size = new System.Drawing.Size(138, 65);
+            this.btnAccept.Size = new System.Drawing.Size(159, 65);
             this.btnAccept.TabIndex = 0;
-            this.btnAccept.Text = "OK";
+            this.btnAccept.Text = "Add Patient";
             this.btnAccept.UseVisualStyleBackColor = true;
             this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 

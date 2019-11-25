@@ -51,8 +51,7 @@ namespace PatientRegistrationApp
             if (comboPatients.SelectedItem != null && m_existingWkBook != null)
             {
                 Excel.Worksheet currSheet = m_existingWkBook.ActiveSheet;
-                int selectedRow = comboPatients.SelectedIndex + 2;
-                ((Excel.Range)currSheet.Rows[selectedRow]).Delete();
+                ((Excel.Range)currSheet.Rows[comboPatients.SelectedIndex+2]).Delete();
                 m_existingWkBook.Save();
                 this.Close();
             }
