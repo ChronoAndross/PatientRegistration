@@ -4,6 +4,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 using OleDbConnection = System.Data.OleDb.OleDbConnection;
 using StringBuilder = System.Text.StringBuilder;
+using Generics = System.Collections.Generic;
 
 /*
 * The MailMergeDialog class does the following:
@@ -26,6 +27,7 @@ namespace PatientRegistrationApp
         {
             InitializeComponent();
             m_existingWkBook = inWorkbook;
+            fDateCounter = new Generics.Dictionary<DateTime, int>();
         }
 
         private void MailMergeDialog_Load(object sender, EventArgs e)
@@ -41,7 +43,12 @@ namespace PatientRegistrationApp
                     {
                         DateTime returnData = currSheet.Cells[currRow, kReturnDateLoc].Value;
                         if (!comboDateSelection.Items.Contains(returnData))
+                        {
                             comboDateSelection.Items.Add(returnData);
+                            fDateCounter.Add(returnData, 1);
+                        }
+                        else
+                            fDateCounter[returnData]++;
                     }
                     currRow++;
                 }
@@ -50,37 +57,36 @@ namespace PatientRegistrationApp
             comboDateSelection.SelectedText = "--Please select a date--";
         }
 
-        private void SendPatientToMailMerge(ref Word.Document inCurrentDoc, 
-            ref string inFirstLast, ref string inAddress, ref string inCityState, 
-            ref int inWordRow, ref Word.WdParagraphAlignment inAlignment, ref Word.Table inCurrTable)
+        private void SendPatientToMailMerge(ref string inFirstLast, ref string inAddress, ref string inCityState, 
+            ref int inWordRow, ref int inColumn, ref Word.Table inCurrTable)
         {
+            Word.WdParagraphAlignment alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
 
-            if (inAlignment == Word.WdParagraphAlignment.wdAlignParagraphLeft)
-            {
-                object start = 0;
-                object end = 0;
-                Word.Range tableLocation = inCurrentDoc.Range(ref start, ref end);
-                inCurrTable = inCurrentDoc.Tables.Add(tableLocation, 3, 3);
-            }
-
-            int currColumn = 1;
-            if (inAlignment == Word.WdParagraphAlignment.wdAlignParagraphCenter)
-                currColumn = 2;
-            else if (inAlignment == Word.WdParagraphAlignment.wdAlignParagraphRight)
-                currColumn = 3;
-
-            Word.Cell cellName = inCurrTable.Cell(inWordRow, currColumn);
+            Word.Cell cellName = inCurrTable.Cell(inWordRow, inColumn);
             cellName.Range.Text = inFirstLast;
-            cellName.Range.ParagraphFormat.Alignment = inAlignment;
+            cellName.Range.ParagraphFormat.Alignment = alignment;
 
-            Word.Cell cellAddress = inCurrTable.Cell(inWordRow + 1, currColumn);
+            Word.Cell cellAddress = inCurrTable.Cell(inWordRow + 1, inColumn);
             cellAddress.Range.Text = inAddress;
-            cellAddress.Range.ParagraphFormat.Alignment = inAlignment;
+            cellAddress.Range.ParagraphFormat.Alignment = alignment;
 
-            Word.Cell cellCityStateZip = inCurrTable.Cell(inWordRow + 2, currColumn);
+            Word.Cell cellCityStateZip = inCurrTable.Cell(inWordRow + 2, inColumn);
             cellCityStateZip.Range.Text = inCityState;
-            cellCityStateZip.Range.ParagraphFormat.Alignment = inAlignment;
+            cellCityStateZip.Range.ParagraphFormat.Alignment = alignment;
 
+        }
+
+        // Create table for newly created word doc representing printing labels based on number of entries found on load
+        private Word.Table CreateTableForWord(ref Word.Document inCurrentDoc, ref DateTime inSelectedTime)
+        {
+            object start = 0;
+            object end = 0;
+            int numColumns = 3;
+            int extraRow = fDateCounter[inSelectedTime] % 3 == 0 ? 0 : 1;
+            int numRows = ((fDateCounter[inSelectedTime] / 3) + extraRow)*4;
+            Word.Range tableLocation = inCurrentDoc.Range(ref start, ref end);
+            Word.Table outWordTable = inCurrentDoc.Tables.Add(tableLocation, numRows, numColumns);
+            return outWordTable;
         }
 
         private void IteratePatientsForMailMerge(Word.Application inApp)
@@ -90,21 +96,17 @@ namespace PatientRegistrationApp
                 Excel.Worksheet currSheet = m_existingWkBook.ActiveSheet;
                 int currExcelRow = 2; // always start on the second row
                 int currWordRow = 1;
-                int currAlignmentType = 0;
-                Word.WdParagraphAlignment[] alignmentTypes = {
-                        Word.WdParagraphAlignment.wdAlignParagraphLeft,
-                        Word.WdParagraphAlignment.wdAlignParagraphCenter,
-                        Word.WdParagraphAlignment.wdAlignParagraphRight
-                };
+                int currWordColumn = 1;
                 Word.Document currDoc = inApp.Documents.Add();
-                Word.Table currTable = null;
+                DateTime selectedDate = DateTime.Parse(comboDateSelection.SelectedItem.ToString());
+                Word.Table currDocTable = CreateTableForWord(ref currDoc, ref selectedDate);
                 while ((currSheet.Cells[currExcelRow, kLastNameLoc]).Text != "")
                 {
                     // if the patient's return date matches, send to MailMerge
                     if ((currSheet.Cells[currExcelRow, kReturnDateLoc]).Text != "")
                     {
                         DateTime returnData = currSheet.Cells[currExcelRow, kReturnDateLoc].Value;
-                        if (comboDateSelection.SelectedItem.Equals(returnData))
+                        if (selectedDate.Equals(returnData))
                         {
                             string firstLastNameStr = currSheet.Cells[currExcelRow, kFirstNameLoc].Value + " "
                                 + currSheet.Cells[currExcelRow, kLastNameLoc].Value;
@@ -115,15 +117,14 @@ namespace PatientRegistrationApp
                                 + currSheet.Cells[currExcelRow, kStateLoc].Value
                                 + " " + currSheet.Cells[currExcelRow, kZipLoc].Value;
 
-                            SendPatientToMailMerge(ref currDoc,
-                                ref firstLastNameStr, ref addressStr, ref cellCityStateZip,
-                                ref currWordRow, ref alignmentTypes[currAlignmentType], ref currTable);
+                            SendPatientToMailMerge(ref firstLastNameStr, ref addressStr, ref cellCityStateZip,
+                                ref currWordRow, ref currWordColumn, ref currDocTable);
 
-                            currAlignmentType++;
+                            currWordColumn++;
 
-                            if (currAlignmentType == 3)
+                            if (currWordColumn == 4)
                             {
-                                currAlignmentType = 0;
+                                currWordColumn = 1;
                                 currWordRow += 4;
                             }
                         }
@@ -139,6 +140,7 @@ namespace PatientRegistrationApp
             IteratePatientsForMailMerge(wordApp);
             wordApp.Visible = true;
             this.Close();
+            fDateCounter = null; // collect memory for the allocated dictionary
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -158,5 +160,7 @@ namespace PatientRegistrationApp
         private const int kHomePhoneLoc = 11;
         private const int kCellPhoneLoc = 12;
         private const int kReturnDateLoc = 18;
+
+        Generics.Dictionary<DateTime, int> fDateCounter; 
     }
 }
