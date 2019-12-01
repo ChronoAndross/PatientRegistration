@@ -34,7 +34,7 @@ namespace PatientRegistrationApp
         {
             if (m_existingWkBook != null)
             {
-                Excel.Worksheet currSheet = m_existingWkBook.ActiveSheet;
+                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
                 int currRow = 2; // always start on the second row
                 while ((currSheet.Cells[currRow, kLastNameLoc]).Text != "")
                 {
@@ -73,7 +73,6 @@ namespace PatientRegistrationApp
             Word.Cell cellCityStateZip = inCurrTable.Cell(inWordRow + 2, inColumn);
             cellCityStateZip.Range.Text = inCityState;
             cellCityStateZip.Range.ParagraphFormat.Alignment = alignment;
-
         }
 
         // Create table for newly created word doc representing printing labels based on number of entries found on load
@@ -86,6 +85,7 @@ namespace PatientRegistrationApp
             int numRows = ((fDateCounter[inSelectedTime] / 3) + extraRow)*4;
             Word.Range tableLocation = inCurrentDoc.Range(ref start, ref end);
             Word.Table outWordTable = inCurrentDoc.Tables.Add(tableLocation, numRows, numColumns);
+            outWordTable.Spacing = 0;
             return outWordTable;
         }
 
@@ -93,7 +93,7 @@ namespace PatientRegistrationApp
         {
             if (m_existingWkBook != null)
             {
-                Excel.Worksheet currSheet = m_existingWkBook.ActiveSheet;
+                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
                 int currExcelRow = 2; // always start on the second row
                 int currWordRow = 1;
                 int currWordColumn = 1;

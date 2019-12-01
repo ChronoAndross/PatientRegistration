@@ -21,7 +21,7 @@ namespace PatientRegistrationApp
         {
             if (m_existingWkBook != null)
             {
-                Excel.Worksheet currSheet = m_existingWkBook.ActiveSheet;
+                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
                 int currRow = 2; // always start on the second row
                 while ((currSheet.Cells[currRow, 2]).Text != "")
                 {
@@ -50,7 +50,7 @@ namespace PatientRegistrationApp
         {
             if (comboPatients.SelectedItem != null && m_existingWkBook != null)
             {
-                Excel.Worksheet currSheet = m_existingWkBook.ActiveSheet;
+                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
                 ((Excel.Range)currSheet.Rows[comboPatients.SelectedIndex+2]).Delete();
                 m_existingWkBook.Save();
                 this.Close();

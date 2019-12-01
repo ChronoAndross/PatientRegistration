@@ -37,8 +37,7 @@ namespace PatientRegistrationApp
         {
             string currDay = DateTime.Today.Date.ToString();
 
-            Excel.Worksheet currSheet = m_existingWkBook.ActiveSheet;
-            //Excel.Worksheet currSheet = m_existingWkBook.Worksheets["Patient Registration MASTER"];
+            Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"];
             int currRow = 1;
             while ((currSheet.Cells[currRow, 2]).Text != "")
                 currRow++;

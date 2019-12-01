@@ -40,7 +40,7 @@
             this.btnSendToMailMerge.Name = "btnSendToMailMerge";
             this.btnSendToMailMerge.Size = new System.Drawing.Size(267, 59);
             this.btnSendToMailMerge.TabIndex = 0;
-            this.btnSendToMailMerge.Text = "Send To MailMerge";
+            this.btnSendToMailMerge.Text = "Send To Mailing Labels";
             this.btnSendToMailMerge.UseVisualStyleBackColor = true;
             this.btnSendToMailMerge.Click += new System.EventHandler(this.btnSendToMailMerge_Click);
             // 
@@ -82,7 +82,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSendToMailMerge);
             this.Name = "MailMergeDialog";
-            this.Text = "Send To MailMerge";
+            this.Text = "Send To Mailing Labels";
             this.Load += new System.EventHandler(this.MailMergeDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
