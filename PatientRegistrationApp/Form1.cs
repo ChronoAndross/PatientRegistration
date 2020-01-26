@@ -17,9 +17,11 @@ namespace PatientRegistrationApp
         {
             try
             {
-                var app = new Excel.Application();
-                app.Visible = false;
-                m_existingWkBook = app.Workbooks.Open("Patient Registration.xlsx");
+                InitializeComponent(); // initialize app
+                mb_initialized = true;
+                m_runningApp = new Excel.Application();
+                m_runningApp.Visible = false;
+                m_existingWkBook = m_runningApp.Workbooks.Open("Patient Registration.xlsx");
                 if (!m_existingWkBook.ReadOnly)
                 {
                     InitializeComponent(); // initialize app
@@ -27,6 +29,7 @@ namespace PatientRegistrationApp
                 }
                 else
                 {
+                    m_runningApp.Quit();
                     Form prompt = new AlertDialog("The Patient Registration excel file is read-only. " +
                         "Please configure this file correctly and reopen the application again.");
                     prompt.ShowDialog();
@@ -35,6 +38,7 @@ namespace PatientRegistrationApp
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                m_runningApp.Quit();
                 Form prompt = new AlertDialog("Failed to find Patient Registration excel file. " +
                     "Please make sure that the excel file is in the same folder as the application.");
                 prompt.ShowDialog();
@@ -49,24 +53,28 @@ namespace PatientRegistrationApp
             bool bOutSuccess = false;
             try
             {
-                m_existingWkBook.Application.Visible = inVisible;
-                bOutSuccess = true;
-            }
-            catch (InvalidCastException /*ex*/)
-            {
-                var app = new Excel.Application();
-                app.Visible = inVisible;
-                m_existingWkBook = app.Workbooks.Open("Patient Registration.xlsx");
+                m_runningApp.Visible = inVisible;
                 bOutSuccess = true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                if (inShowDialog)
+                if (ex is InvalidCastException 
+                    || ex is System.Runtime.InteropServices.COMException)
                 {
-                    Form prompt = new AlertDialog("Failed to find Patient Registration excel file. " +
-                    "Please make sure that the excel file is in the same folder as the application.");
-                    prompt.ShowDialog();
+                    m_runningApp = new Excel.Application();
+                    m_runningApp.Visible = true;
+                    m_existingWkBook = m_runningApp.Workbooks.Open("Patient Registration.xlsx");
+                    bOutSuccess = true;
+                }
+                else // can't open the doc anymore unfortunately. tell the user about this
+                {
+                    if (inShowDialog)
+                    {
+                        Form prompt = new AlertDialog("Failed to find Patient Registration excel file. " +
+                        "Please make sure that the excel file is in the same folder as the application.");
+                        prompt.ShowDialog();
+                    }
                 }
             }
             return bOutSuccess;
@@ -121,11 +129,15 @@ namespace PatientRegistrationApp
         protected override void OnClosed(EventArgs e)
         {
             if (OpenExcelFileOnAccessFailure(false, false))
+            {
                 m_existingWkBook.Close();
+                m_runningApp.Quit();
+            }
         }
 
         private bool mb_initialized = false;
         private bool mb_ExcelDocumentIsOpen = false;
         private Excel.Workbook m_existingWkBook = null;
+        Excel.Application m_runningApp = null;
     }
 }
