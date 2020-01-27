@@ -84,6 +84,9 @@ namespace PatientRegistrationApp
             int extraRow = fDateCounter[inSelectedTime] % 3 == 0 ? 0 : 1;
             int numRows = ((fDateCounter[inSelectedTime] / 3) + extraRow)*4;
             Word.Range tableLocation = inCurrentDoc.Range(ref start, ref end);
+            tableLocation.Paragraphs.LineSpacingRule = Word.WdLineSpacing.wdLineSpaceSingle;
+            tableLocation.Paragraphs.SpaceBefore = 0;
+            tableLocation.Paragraphs.SpaceAfter = 4.5f;
             Word.Table outWordTable = inCurrentDoc.Tables.Add(tableLocation, numRows, numColumns);
             outWordTable.Spacing = 0;
             return outWordTable;
@@ -98,6 +101,13 @@ namespace PatientRegistrationApp
                 int currWordRow = 1;
                 int currWordColumn = 1;
                 Word.Document currDoc = inApp.Documents.Add();
+
+                // Setup margins for Avery labels. TODO: Have UI for other kinds of mailing labels.
+                currDoc.PageSetup.LeftMargin = inApp.InchesToPoints(0.25f);
+                currDoc.PageSetup.TopMargin = inApp.InchesToPoints(0.8f);
+                currDoc.PageSetup.RightMargin = inApp.InchesToPoints(0.125f);
+                currDoc.PageSetup.BottomMargin = inApp.InchesToPoints(0.4f);
+
                 DateTime selectedDate = DateTime.Parse(comboDateSelection.SelectedItem.ToString());
                 Word.Table currDocTable = CreateTableForWord(ref currDoc, ref selectedDate);
                 while ((currSheet.Cells[currExcelRow, kLastNameLoc]).Text != "")
