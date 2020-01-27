@@ -53,8 +53,17 @@ namespace PatientRegistrationApp
             bool bOutSuccess = false;
             try
             {
-                m_runningApp.Visible = inVisible;
-                bOutSuccess = true;
+                if (m_runningApp.Workbooks.Count == 0)
+                {
+                    m_runningApp.Visible = true;
+                    m_existingWkBook = m_runningApp.Workbooks.Open("Patient Registration.xlsx");
+                    bOutSuccess = false;
+                }
+                else
+                {
+                    m_runningApp.Visible = inVisible;
+                    bOutSuccess = true;
+                }
             }
             catch (Exception ex)
             {
