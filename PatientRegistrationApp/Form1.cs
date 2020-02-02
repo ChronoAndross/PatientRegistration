@@ -15,14 +15,14 @@ namespace PatientRegistrationApp
     {
         public PatientRegistrationApp()
         {
+            m_FileStr = AppDomain.CurrentDomain.BaseDirectory + "Patient Registration.xlsx";
             try
             {
                 InitializeComponent(); // initialize app
                 mb_initialized = true;
                 m_runningApp = new Excel.Application();
                 m_runningApp.Visible = false;
-                string appDir = AppDomain.CurrentDomain.BaseDirectory;
-                m_existingWkBook = m_runningApp.Workbooks.Open(appDir+"Patient Registration.xlsx");
+                m_existingWkBook = m_runningApp.Workbooks.Open(m_FileStr);
                 if (!m_existingWkBook.ReadOnly)
                 {
                     InitializeComponent(); // initialize app
@@ -57,7 +57,7 @@ namespace PatientRegistrationApp
                 if (m_runningApp.Workbooks.Count == 0)
                 {
                     m_runningApp.Visible = true;
-                    m_existingWkBook = m_runningApp.Workbooks.Open("Patient Registration.xlsx");
+                    m_existingWkBook = m_runningApp.Workbooks.Open(m_FileStr);
                     bOutSuccess = false;
                 }
                 else
@@ -74,7 +74,7 @@ namespace PatientRegistrationApp
                 {
                     m_runningApp = new Excel.Application();
                     m_runningApp.Visible = true;
-                    m_existingWkBook = m_runningApp.Workbooks.Open("Patient Registration.xlsx");
+                    m_existingWkBook = m_runningApp.Workbooks.Open(m_FileStr);
                     bOutSuccess = true;
                 }
                 else // can't open the doc anymore unfortunately. tell the user about this
@@ -149,5 +149,6 @@ namespace PatientRegistrationApp
         private bool mb_ExcelDocumentIsOpen = false;
         private Excel.Workbook m_existingWkBook = null;
         Excel.Application m_runningApp = null;
+        private string m_FileStr = "";
     }
 }
