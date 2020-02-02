@@ -21,7 +21,8 @@ namespace PatientRegistrationApp
                 mb_initialized = true;
                 m_runningApp = new Excel.Application();
                 m_runningApp.Visible = false;
-                m_existingWkBook = m_runningApp.Workbooks.Open("Patient Registration.xlsx");
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                m_existingWkBook = m_runningApp.Workbooks.Open(appDir+"Patient Registration.xlsx");
                 if (!m_existingWkBook.ReadOnly)
                 {
                     InitializeComponent(); // initialize app
