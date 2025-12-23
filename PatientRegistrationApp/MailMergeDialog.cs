@@ -1,10 +1,12 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
-using Word = Microsoft.Office.Interop.Word;
+using Generics = System.Collections.Generic;
 using OleDbConnection = System.Data.OleDb.OleDbConnection;
 using StringBuilder = System.Text.StringBuilder;
-using Generics = System.Collections.Generic;
+using Word = Microsoft.Office.Interop.Word;
 
 /*
 * The MailMergeDialog class does the following:
@@ -18,159 +20,143 @@ namespace PatientRegistrationApp
 {
     public partial class MailMergeDialog : Form
     {
-        public MailMergeDialog()
-        {
-            InitializeComponent();
-        }
+        private string m_filePath;
+        private Dictionary<DateTime, int> fDateCounter = new Dictionary<DateTime, int>();
 
-        public MailMergeDialog(Excel.Workbook inWorkbook)
-        {
-            InitializeComponent();
-            m_existingWkBook = inWorkbook;
-            fDateCounter = new Generics.Dictionary<DateTime, int>();
-        }
-
-        private void MailMergeDialog_Load(object sender, EventArgs e)
-        {
-            if (m_existingWkBook != null)
-            {
-                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
-                int currRow = 2; // always start on the second row
-                while ((currSheet.Cells[currRow, kLastNameLoc]).Text != "")
-                {
-                    // put new patient into excel doc
-                    if ((currSheet.Cells[currRow, kReturnDateLoc]).Text != "")
-                    {
-                        DateTime returnData = currSheet.Cells[currRow, kReturnDateLoc].Value;
-                        if (!comboDateSelection.Items.Contains(returnData))
-                        {
-                            comboDateSelection.Items.Add(returnData);
-                            fDateCounter.Add(returnData, 1);
-                        }
-                        else
-                            fDateCounter[returnData]++;
-                    }
-                    currRow++;
-                }
-            }
-            comboDateSelection.SelectedItem = null;
-            comboDateSelection.SelectedText = "--Please select a date--";
-        }
-
-        private void SendPatientToMailMerge(ref string inFirstLast, ref string inAddress, ref string inCityState, 
-            ref int inWordRow, ref int inColumn, ref Word.Table inCurrTable)
-        {
-            Word.WdParagraphAlignment alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
-
-            Word.Cell cellName = inCurrTable.Cell(inWordRow, inColumn);
-            cellName.Range.Text = inFirstLast;
-            cellName.Range.ParagraphFormat.Alignment = alignment;
-
-            Word.Cell cellAddress = inCurrTable.Cell(inWordRow + 1, inColumn);
-            cellAddress.Range.Text = inAddress;
-            cellAddress.Range.ParagraphFormat.Alignment = alignment;
-
-            Word.Cell cellCityStateZip = inCurrTable.Cell(inWordRow + 2, inColumn);
-            cellCityStateZip.Range.Text = inCityState;
-            cellCityStateZip.Range.ParagraphFormat.Alignment = alignment;
-        }
-
-        // Create table for newly created word doc representing printing labels based on number of entries found on load
-        private Word.Table CreateTableForWord(ref Word.Document inCurrentDoc, ref DateTime inSelectedTime)
-        {
-            object start = 0;
-            object end = 0;
-            int numColumns = 3;
-            int extraRow = fDateCounter[inSelectedTime] % 3 == 0 ? 0 : 1;
-            int numRows = ((fDateCounter[inSelectedTime] / 3) + extraRow)*4;
-            Word.Range tableLocation = inCurrentDoc.Range(ref start, ref end);
-            tableLocation.Paragraphs.LineSpacingRule = Word.WdLineSpacing.wdLineSpaceSingle;
-            tableLocation.Paragraphs.SpaceBefore = 0;
-            tableLocation.Paragraphs.SpaceAfter = 4.5f;
-            Word.Table outWordTable = inCurrentDoc.Tables.Add(tableLocation, numRows, numColumns);
-            outWordTable.Spacing = 0;
-            return outWordTable;
-        }
-
-        private void IteratePatientsForMailMerge(Word.Application inApp)
-        {
-            if (m_existingWkBook != null)
-            {
-                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
-                int currExcelRow = 2; // always start on the second row
-                int currWordRow = 1;
-                int currWordColumn = 1;
-                Word.Document currDoc = inApp.Documents.Add();
-
-                // Setup margins for Avery labels. TODO: Have UI for other kinds of mailing labels.
-                currDoc.PageSetup.LeftMargin = inApp.InchesToPoints(0.25f);
-                currDoc.PageSetup.TopMargin = inApp.InchesToPoints(0.8f);
-                currDoc.PageSetup.RightMargin = inApp.InchesToPoints(0.125f);
-                currDoc.PageSetup.BottomMargin = inApp.InchesToPoints(0.4f);
-
-                DateTime selectedDate = DateTime.Parse(comboDateSelection.SelectedItem.ToString());
-                Word.Table currDocTable = CreateTableForWord(ref currDoc, ref selectedDate);
-                while ((currSheet.Cells[currExcelRow, kLastNameLoc]).Text != "")
-                {
-                    // if the patient's return date matches, send to MailMerge
-                    if ((currSheet.Cells[currExcelRow, kReturnDateLoc]).Text != "")
-                    {
-                        DateTime returnData = currSheet.Cells[currExcelRow, kReturnDateLoc].Value;
-                        if (selectedDate.Equals(returnData))
-                        {
-                            string firstLastNameStr = currSheet.Cells[currExcelRow, kFirstNameLoc].Value + " "
-                                + currSheet.Cells[currExcelRow, kLastNameLoc].Value;
-
-                            string addressStr = currSheet.Cells[currExcelRow, kAddressLoc].Value;
-
-                            string cellCityStateZip = currSheet.Cells[currExcelRow, kCityLoc].Value + ", "
-                                + currSheet.Cells[currExcelRow, kStateLoc].Value
-                                + " " + currSheet.Cells[currExcelRow, kZipLoc].Value;
-
-                            SendPatientToMailMerge(ref firstLastNameStr, ref addressStr, ref cellCityStateZip,
-                                ref currWordRow, ref currWordColumn, ref currDocTable);
-
-                            currWordColumn++;
-
-                            if (currWordColumn == 4)
-                            {
-                                currWordColumn = 1;
-                                currWordRow += 4;
-                            }
-                        }
-                    }
-                    currExcelRow++;
-                }
-            }
-        }
-
-        private void btnSendToMailMerge_Click(object sender, EventArgs e)
-        {            
-            var wordApp = new Word.Application();
-            IteratePatientsForMailMerge(wordApp);
-            wordApp.Visible = true;
-            this.Close();
-            fDateCounter = null; // collect memory for the allocated dictionary
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private Excel.Workbook m_existingWkBook = null; // passed from main dialog
-
-        private const int kCurrDateLoc = 1;
+        // Locations constants (keeping your existing mapping)
         private const int kFirstNameLoc = 2;
         private const int kLastNameLoc = 3;
         private const int kAddressLoc = 7;
         private const int kCityLoc = 8;
         private const int kStateLoc = 9;
         private const int kZipLoc = 10;
-        private const int kHomePhoneLoc = 11;
-        private const int kCellPhoneLoc = 12;
         private const int kReturnDateLoc = 18;
 
-        Generics.Dictionary<DateTime, int> fDateCounter; 
+        public MailMergeDialog()
+        {
+            InitializeComponent();
+        }
+
+        public MailMergeDialog(string filePath)
+        {
+            InitializeComponent();
+            m_filePath = filePath;
+        }
+
+        private void MailMergeDialog_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var workbook = new XLWorkbook(m_filePath))
+                {
+                    var worksheet = workbook.Worksheet("Patient_Registration MASTER");
+                    var rows = worksheet.RowsUsed().Skip(1); // Skip header
+
+                    foreach (var row in rows)
+                    {
+                        var cellValue = row.Cell(kReturnDateLoc).Value;
+                        if (cellValue.IsDateTime)
+                        {
+                            DateTime returnData = cellValue.GetDateTime();
+                            if (!fDateCounter.ContainsKey(returnData))
+                            {
+                                comboDateSelection.Items.Add(returnData.ToShortDateString());
+                                fDateCounter.Add(returnData, 1);
+                            }
+                            else
+                            {
+                                fDateCounter[returnData]++;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading dates: " + ex.Message);
+            }
+
+            comboDateSelection.Text = "--Please select a date--";
+        }
+
+        private void SendPatientToMailMerge(string inName, string inAddr, string inCSZ, int inRow, int inCol, Word.Table inTable)
+        {
+            // Word tables use 1-based indexing
+            inTable.Cell(inRow, inCol).Range.Text = inName;
+            inTable.Cell(inRow + 1, inCol).Range.Text = inAddr;
+            inTable.Cell(inRow + 2, inCol).Range.Text = inCSZ;
+        }
+
+        // Create table for newly created word doc representing printing labels based on number of entries found on load
+        private Word.Table CreateTableForWord(ref Word.Document inDoc, ref DateTime inDate)
+        {
+            int numColumns = 3;
+            int patientCount = fDateCounter[inDate];
+            int numRows = ((int)Math.Ceiling(patientCount / 3.0)) * 4;
+
+            Word.Table outTable = inDoc.Tables.Add(inDoc.Range(), numRows, numColumns);
+            outTable.Range.ParagraphFormat.SpaceAfter = 4.5f;
+            outTable.Range.ParagraphFormat.LineSpacingRule = Word.WdLineSpacing.wdLineSpaceSingle;
+
+            return outTable;
+        }
+
+        private void IteratePatientsForMailMerge(Word.Application inApp)
+        {
+            if (comboDateSelection.SelectedIndex == -1) return;
+
+            DateTime selectedDate = DateTime.Parse(comboDateSelection.SelectedItem.ToString());
+            Word.Document currDoc = inApp.Documents.Add();
+
+            // Setup Page (Avery Labels)
+            currDoc.PageSetup.LeftMargin = inApp.InchesToPoints(0.25f);
+            currDoc.PageSetup.TopMargin = inApp.InchesToPoints(0.8f);
+            currDoc.PageSetup.RightMargin = inApp.InchesToPoints(0.125f);
+            currDoc.PageSetup.BottomMargin = inApp.InchesToPoints(0.4f);
+
+            Word.Table currDocTable = CreateTableForWord(ref currDoc, ref selectedDate);
+
+            using (var workbook = new XLWorkbook(m_filePath))
+            {
+                var worksheet = workbook.Worksheet("Patient_Registration MASTER");
+                var rows = worksheet.RowsUsed().Skip(1);
+
+                int currWordRow = 1;
+                int currWordColumn = 1;
+
+                foreach (var row in rows)
+                {
+                    var cellValue = row.Cell(kReturnDateLoc).Value;
+                    if (cellValue.IsDateTime && cellValue.GetDateTime().Date == selectedDate.Date)
+                    {
+                        string name = $"{row.Cell(kFirstNameLoc).Value} {row.Cell(kLastNameLoc).Value}";
+                        string address = row.Cell(kAddressLoc).Value.ToString();
+                        string cityStateZip = $"{row.Cell(kCityLoc).Value}, {row.Cell(kStateLoc).Value} {row.Cell(kZipLoc).Value}";
+
+                        SendPatientToMailMerge(name, address, cityStateZip, currWordRow, currWordColumn, currDocTable);
+
+                        currWordColumn++;
+                        if (currWordColumn > 3)
+                        {
+                            currWordColumn = 1;
+                            currWordRow += 4;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnSendToMailMerge_Click(object sender, EventArgs e)
+        {
+            var wordApp = new Word.Application();
+            IteratePatientsForMailMerge(wordApp);
+            wordApp.Visible = true;
+            this.Close();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

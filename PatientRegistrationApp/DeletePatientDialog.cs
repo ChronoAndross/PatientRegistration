@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
+using System.IO;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -6,40 +8,43 @@ namespace PatientRegistrationApp
 {
     public partial class DeletePatientDialog : Form
     {
-        public DeletePatientDialog()
-        {
-            InitializeComponent();
-        }
+        private string m_filePath;
+        private const int kFirstNameLoc = 2;
+        private const int kLastNameLoc = 3;
 
-        public DeletePatientDialog(Excel.Workbook inWorkbook)
+        public DeletePatientDialog(string filePath)
         {
             InitializeComponent();
-            m_existingWkBook = inWorkbook;
+            m_filePath = filePath;
         }
 
         private void DeletePatientDialog_Load(object sender, EventArgs e)
         {
-            if (m_existingWkBook != null)
+            try
             {
-                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
-                int currRow = 2; // always start on the second row
-                while ((currSheet.Cells[currRow, 2]).Text != "")
+                using (var workbook = new XLWorkbook(m_filePath))
                 {
-                    // put new patient into excel doc
-                    string firstName = currSheet.Cells[currRow, kFirstNameLoc].Value;
-                    string lastName = currSheet.Cells[currRow, kLastNameLoc].Value;
-                    comboPatients.Items.Add(firstName + " " + lastName);
-                    currRow++;
+                    var worksheet = workbook.Worksheet("Patient_Registration MASTER");
+
+                    // Get all rows that have data (starting from row 2 to skip headers)
+                    var rows = worksheet.RowsUsed(r => r.RowNumber() >= 2);
+
+                    comboPatients.Items.Clear();
+                    foreach (var row in rows)
+                    {
+                        string firstName = row.Cell(kFirstNameLoc).GetValue<string>();
+                        string lastName = row.Cell(kLastNameLoc).GetValue<string>();
+                        comboPatients.Items.Add($"{firstName} {lastName}");
+                    }
                 }
             }
-            comboPatients.SelectedItem = null;
-            comboPatients.SelectedText = "--Please select a patient to remove--";
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to load patients, Reason: " + ex.Message);
+            }
+
+            comboPatients.Text = "--Please select a patient to remove--";
         }
-
-        private Excel.Workbook m_existingWkBook = null; // passed from main dialog
-
-        private const int kFirstNameLoc = 2;
-        private const int kLastNameLoc = 3;
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
@@ -48,17 +53,28 @@ namespace PatientRegistrationApp
 
         private void btnAccept_Click(object sender, EventArgs e)
         {
-            if (comboPatients.SelectedItem != null && m_existingWkBook != null)
+            if (comboPatients.SelectedIndex != -1)
             {
-                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
-                ((Excel.Range)currSheet.Rows[comboPatients.SelectedIndex+2]).Delete();
-                m_existingWkBook.Save();
-                this.Close();
+                int rowToDelete = comboPatients.SelectedIndex + 2;
+
+                try
+                {
+                    using (var workbook = new XLWorkbook(m_filePath))
+                    {
+                        var worksheet = workbook.Worksheet("Patient_Registration MASTER");
+                        worksheet.Row(rowToDelete).Delete(); // Removes the row and shifts others up
+                        workbook.Save();
+                    }
+                    this.Close();
+                }
+                catch (IOException)
+                {
+                    MessageBox.Show("The file is open in another program. Please close it first.");
+                }
             }
             else
             {
-                string dialogText = "A patient has not been selected. Please select a patient to remove.";
-                Form prompt = new AlertDialog(dialogText);
+                Form prompt = new AlertDialog("A patient has not been selected. Please select a patient to remove.");
                 prompt.ShowDialog();
             }
         }

@@ -1,12 +1,15 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
+using System.IO;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace PatientRegistrationApp
 {
     public partial class AddPatientDialog : Form
     {
-        
+
+        private string m_filePath;
+
         enum DialogDataValid
         {
             eNoError,
@@ -16,17 +19,12 @@ namespace PatientRegistrationApp
             eBadDateFormat
         }
 
-        public AddPatientDialog()
+        public AddPatientDialog(string filePath)
         {
             InitializeComponent();
-            m_existingWkBook = null;
+            m_filePath = filePath;
         }
 
-        public AddPatientDialog(Excel.Workbook inWorkbook)
-        {
-            InitializeComponent();
-            m_existingWkBook = inWorkbook;
-        }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
@@ -35,26 +33,33 @@ namespace PatientRegistrationApp
 
         private void SendDialogDataToExcel()
         {
-            string currDay = DateTime.Today.Date.ToString();
+            try
+            {
+                using (var workbook = new XLWorkbook(m_filePath))
+                {
+                    var worksheet = workbook.Worksheet("Patient_Registration MASTER");
 
-            Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"];
-            int currRow = 1;
-            while ((currSheet.Cells[currRow, 2]).Text != "")
-                currRow++;
+                    int lastRow = worksheet.LastRowUsed()?.RowNumber() ?? 0;
+                    int currRow = lastRow + 1;
 
-            // put new patient into excel doc
-            currSheet.Cells[currRow, kCurrDateLoc].Value = currDay;
-            currSheet.Cells[currRow, kFirstNameLoc].Value = textFirstName.Text;
-            currSheet.Cells[currRow, kLastNameLoc].Value = textLastName.Text;
-            currSheet.Cells[currRow, kAddressLoc].Value = textAddress.Text;
-            currSheet.Cells[currRow , kCityLoc].Value = textCity.Text;
-            currSheet.Cells[currRow, kStateLoc].Value = textState.Text;
-            currSheet.Cells[currRow, kZipLoc].Value = textZip.Text;
-            currSheet.Cells[currRow, kHomePhoneLoc].Value = textHomePhone.Text;
-            currSheet.Cells[currRow, kCellPhoneLoc].Value = textCellPhone.Text;
-            currSheet.Cells[currRow, kReturnDateLoc].Value = textReturnDate.Text;
+                    worksheet.Cell(currRow, kCurrDateLoc).Value = DateTime.Today.ToShortDateString();
+                    worksheet.Cell(currRow, kFirstNameLoc).Value = textFirstName.Text;
+                    worksheet.Cell(currRow, kLastNameLoc).Value = textLastName.Text;
+                    worksheet.Cell(currRow, kAddressLoc).Value = textAddress.Text;
+                    worksheet.Cell(currRow, kCityLoc).Value = textCity.Text;
+                    worksheet.Cell(currRow, kStateLoc).Value = textState.Text;
+                    worksheet.Cell(currRow, kZipLoc).Value = textZip.Text;
+                    worksheet.Cell(currRow, kHomePhoneLoc).Value = textHomePhone.Text;
+                    worksheet.Cell(currRow, kCellPhoneLoc).Value = textCellPhone.Text;
+                    worksheet.Cell(currRow, kReturnDateLoc).Value = textReturnDate.Text;
 
-            m_existingWkBook.Save(); // save this newly added row
+                    workbook.Save(); // Saves the file instantly
+                }
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("File is currently open in another program, Close the file and try again");
+            }
         }
 
         private DialogDataValid IsInputDataValid()
@@ -99,7 +104,7 @@ namespace PatientRegistrationApp
         {
             // TODO: Check if workbook is read-only
             DialogDataValid dataValid = IsInputDataValid();
-            if (dataValid == DialogDataValid.eNoError && m_existingWkBook != null)
+            if (dataValid == DialogDataValid.eNoError)
             {
                 // All data is valid. Send to Excel spreadsheet
                 SendDialogDataToExcel();
@@ -118,7 +123,6 @@ namespace PatientRegistrationApp
             }
         }
 
-        private Excel.Workbook m_existingWkBook = null; // passed from main dialog
 
         private const int kCurrDateLoc = 1;
         private const int kFirstNameLoc = 2;
