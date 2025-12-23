@@ -150,5 +150,10 @@ namespace PatientRegistrationApp
         private Excel.Workbook m_existingWkBook = null;
         Excel.Application m_runningApp = null;
         private string m_FileStr = "";
+
+        private void PatientRegistrationApp_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

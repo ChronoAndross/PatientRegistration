@@ -1,0 +1,264 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\marna\\Documents\\PatientRegistration\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|c:\\users\\marna\\documents\\patientregistration\\patientregistrationapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\addpatientdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\addpatientdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\addpatientdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\addpatientdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\mailmergedialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\mailmergedialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\mailmergedialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\mailmergedialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\deletepatientdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\deletepatientdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\deletepatientdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\deletepatientdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\deletepatientdialog.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\deletepatientdialog.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\addpatientdialog.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\addpatientdialog.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\alertdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\alertdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\alertdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\alertdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\deletepatientdialog.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\deletepatientdialog.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|C:\\Users\\marna\\Documents\\PatientRegistration\\patientregistrationapp\\mailmergedialog.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01356B07-0F30-4432-97E3-40AA8294527E}|PatientRegistrationApp\\PatientRegistrationApp.csproj|solutionrelative:patientregistrationapp\\mailmergedialog.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\Form1.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\Form1.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\Form1.cs",
+              "RelativeToolTip": "PatientRegistrationApp\\Form1.cs",
+              "ViewState": "AgIAAH0AAAAAAAAAAADwv5MAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:19:46.548Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AddPatientDialog.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AddPatientDialog.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\AddPatientDialog.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AddPatientDialog.cs [Design]",
+              "RelativeToolTip": "PatientRegistrationApp\\AddPatientDialog.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:15:56.361Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AddPatientDialog.cs",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AddPatientDialog.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\AddPatientDialog.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AddPatientDialog.cs",
+              "RelativeToolTip": "PatientRegistrationApp\\AddPatientDialog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:15:59.328Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\Form1.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\Form1.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\Form1.cs [Design]",
+              "RelativeToolTip": "PatientRegistrationApp\\Form1.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:10:03.009Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MailMergeDialog.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\MailMergeDialog.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\MailMergeDialog.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\MailMergeDialog.cs [Design]",
+              "RelativeToolTip": "PatientRegistrationApp\\MailMergeDialog.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:09:35.044Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MailMergeDialog.cs",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\MailMergeDialog.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\MailMergeDialog.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\MailMergeDialog.cs",
+              "RelativeToolTip": "PatientRegistrationApp\\MailMergeDialog.cs",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAIwCIAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:17:18.65Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DeletePatientDialog.cs",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\DeletePatientDialog.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\DeletePatientDialog.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\DeletePatientDialog.cs",
+              "RelativeToolTip": "PatientRegistrationApp\\DeletePatientDialog.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAowA8AAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:36:11.8Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DeletePatientDialog.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\DeletePatientDialog.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\DeletePatientDialog.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\DeletePatientDialog.cs [Design]",
+              "RelativeToolTip": "PatientRegistrationApp\\DeletePatientDialog.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:36:10.103Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DeletePatientDialog.resx",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\DeletePatientDialog.resx",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\DeletePatientDialog.resx",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\DeletePatientDialog.resx",
+              "RelativeToolTip": "PatientRegistrationApp\\DeletePatientDialog.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-12-20T19:36:09.066Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AlertDialog.cs",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AlertDialog.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\AlertDialog.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AlertDialog.cs",
+              "RelativeToolTip": "PatientRegistrationApp\\AlertDialog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:16:40.468Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AlertDialog.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AlertDialog.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\AlertDialog.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AlertDialog.cs [Design]",
+              "RelativeToolTip": "PatientRegistrationApp\\AlertDialog.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:16:31.746Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AddPatientDialog.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AddPatientDialog.Designer.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\AddPatientDialog.Designer.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\AddPatientDialog.Designer.cs",
+              "RelativeToolTip": "PatientRegistrationApp\\AddPatientDialog.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:11:32.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "DeletePatientDialog.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\DeletePatientDialog.Designer.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\DeletePatientDialog.Designer.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\DeletePatientDialog.Designer.cs",
+              "RelativeToolTip": "PatientRegistrationApp\\DeletePatientDialog.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:14:17.806Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "MailMergeDialog.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\MailMergeDialog.Designer.cs",
+              "RelativeDocumentMoniker": "PatientRegistrationApp\\MailMergeDialog.Designer.cs",
+              "ToolTip": "C:\\Users\\marna\\Documents\\PatientRegistration\\PatientRegistrationApp\\MailMergeDialog.Designer.cs",
+              "RelativeToolTip": "PatientRegistrationApp\\MailMergeDialog.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T19:13:59.316Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

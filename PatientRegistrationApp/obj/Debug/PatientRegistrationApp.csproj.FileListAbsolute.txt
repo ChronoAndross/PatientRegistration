@@ -1,0 +1,15 @@
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\bin\Debug\PatientRegistrationApp.exe.config
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\bin\Debug\PatientRegistrationApp.exe
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\bin\Debug\PatientRegistrationApp.pdb
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.csproj.AssemblyReference.cache
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.csproj.ResolveComReference.cache
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.AddPatientDialog.resources
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.AlertDialog.resources
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.DeletePatientDialog.resources
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.PatientRegistrationApp.resources
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.MailMergeDialog.resources
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.Properties.Resources.resources
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.csproj.GenerateResource.cache
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.csproj.CoreCompileInputs.cache
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.exe
+C:\Users\marna\Documents\PatientRegistration\PatientRegistrationApp\obj\Debug\PatientRegistrationApp.pdb

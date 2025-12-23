@@ -37,9 +37,10 @@
             // 
             // btnInputPat
             // 
-            this.btnInputPat.Location = new System.Drawing.Point(84, 90);
+            this.btnInputPat.Location = new System.Drawing.Point(42, 47);
+            this.btnInputPat.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnInputPat.Name = "btnInputPat";
-            this.btnInputPat.Size = new System.Drawing.Size(209, 78);
+            this.btnInputPat.Size = new System.Drawing.Size(104, 41);
             this.btnInputPat.TabIndex = 0;
             this.btnInputPat.Text = "Input Patient";
             this.btnInputPat.UseVisualStyleBackColor = true;
@@ -47,9 +48,10 @@
             // 
             // btnDeletePat
             // 
-            this.btnDeletePat.Location = new System.Drawing.Point(84, 210);
+            this.btnDeletePat.Location = new System.Drawing.Point(42, 109);
+            this.btnDeletePat.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnDeletePat.Name = "btnDeletePat";
-            this.btnDeletePat.Size = new System.Drawing.Size(209, 90);
+            this.btnDeletePat.Size = new System.Drawing.Size(104, 47);
             this.btnDeletePat.TabIndex = 1;
             this.btnDeletePat.Text = "Delete Patient";
             this.btnDeletePat.UseVisualStyleBackColor = true;
@@ -57,9 +59,10 @@
             // 
             // btnOpenXls
             // 
-            this.btnOpenXls.Location = new System.Drawing.Point(459, 90);
+            this.btnOpenXls.Location = new System.Drawing.Point(230, 47);
+            this.btnOpenXls.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnOpenXls.Name = "btnOpenXls";
-            this.btnOpenXls.Size = new System.Drawing.Size(209, 78);
+            this.btnOpenXls.Size = new System.Drawing.Size(104, 41);
             this.btnOpenXls.TabIndex = 2;
             this.btnOpenXls.Text = "Open Excel File";
             this.btnOpenXls.UseVisualStyleBackColor = true;
@@ -67,9 +70,10 @@
             // 
             // btnSendMailmerge
             // 
-            this.btnSendMailmerge.Location = new System.Drawing.Point(459, 210);
+            this.btnSendMailmerge.Location = new System.Drawing.Point(230, 109);
+            this.btnSendMailmerge.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnSendMailmerge.Name = "btnSendMailmerge";
-            this.btnSendMailmerge.Size = new System.Drawing.Size(209, 90);
+            this.btnSendMailmerge.Size = new System.Drawing.Size(104, 47);
             this.btnSendMailmerge.TabIndex = 3;
             this.btnSendMailmerge.Text = "Send to Mailing Labels";
             this.btnSendMailmerge.UseVisualStyleBackColor = true;
@@ -77,9 +81,10 @@
             // 
             // btnAbout
             // 
-            this.btnAbout.Location = new System.Drawing.Point(296, 369);
+            this.btnAbout.Location = new System.Drawing.Point(148, 192);
+            this.btnAbout.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(182, 59);
+            this.btnAbout.Size = new System.Drawing.Size(91, 31);
             this.btnAbout.TabIndex = 4;
             this.btnAbout.Text = "About";
             this.btnAbout.UseVisualStyleBackColor = true;
@@ -87,17 +92,19 @@
             // 
             // PatientRegistrationApp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(903, 515);
+            this.ClientSize = new System.Drawing.Size(452, 268);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.btnSendMailmerge);
             this.Controls.Add(this.btnOpenXls);
             this.Controls.Add(this.btnDeletePat);
             this.Controls.Add(this.btnInputPat);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "PatientRegistrationApp";
             this.Text = "PatientRegistrationApp";
+            this.Load += new System.EventHandler(this.PatientRegistrationApp_Load);
             this.ResumeLayout(false);
 
         }

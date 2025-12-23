@@ -130,5 +130,10 @@ namespace PatientRegistrationApp
         private const int kHomePhoneLoc = 11;
         private const int kCellPhoneLoc = 12;
         private const int kReturnDateLoc = 18;
+
+        private void AddPatientDialog_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
