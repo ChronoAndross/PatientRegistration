@@ -51,7 +51,11 @@ namespace PatientRegistrationApp
                     worksheet.Cell(currRow, kZipLoc).Value = textZip.Text;
                     worksheet.Cell(currRow, kHomePhoneLoc).Value = textHomePhone.Text;
                     worksheet.Cell(currRow, kCellPhoneLoc).Value = textCellPhone.Text;
-                    worksheet.Cell(currRow, kReturnDateLoc).Value = textReturnDate.Text;
+
+                    if (DateTime.TryParse(textReturnDate.Text, out DateTime parsedDate))
+                    {
+                        worksheet.Cell(currRow, kReturnDateLoc).Value = parsedDate; // Saves as a true Date
+                    }
 
                     workbook.Save(); // Saves the file instantly
                 }
