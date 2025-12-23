@@ -1,3 +1,4 @@
 ./PatientRegistrationApp/bin/
 ./PatientRegistrationApp/obj/
 ./PatientRegistrationApp/.vs/
+./packages/
