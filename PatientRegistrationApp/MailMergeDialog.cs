@@ -1,10 +1,12 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
-using Word = Microsoft.Office.Interop.Word;
+using Generics = System.Collections.Generic;
 using OleDbConnection = System.Data.OleDb.OleDbConnection;
 using StringBuilder = System.Text.StringBuilder;
-using Generics = System.Collections.Generic;
+using Word = Microsoft.Office.Interop.Word;
 
 /*
 * The MailMergeDialog class does the following:
@@ -18,159 +20,239 @@ namespace PatientRegistrationApp
 {
     public partial class MailMergeDialog : Form
     {
-        public MailMergeDialog()
-        {
-            InitializeComponent();
-        }
+        private string m_filePath;
+        private Dictionary<string, int> fMonthCounter = new Dictionary<string, int>();
 
-        public MailMergeDialog(Excel.Workbook inWorkbook)
-        {
-            InitializeComponent();
-            m_existingWkBook = inWorkbook;
-            fDateCounter = new Generics.Dictionary<DateTime, int>();
-        }
+        // determines what sheet to use
+        private string workSheetName = "Patient_Registration MASTER";
 
-        private void MailMergeDialog_Load(object sender, EventArgs e)
-        {
-            if (m_existingWkBook != null)
-            {
-                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
-                int currRow = 2; // always start on the second row
-                while ((currSheet.Cells[currRow, kLastNameLoc]).Text != "")
-                {
-                    // put new patient into excel doc
-                    if ((currSheet.Cells[currRow, kReturnDateLoc]).Text != "")
-                    {
-                        DateTime returnData = currSheet.Cells[currRow, kReturnDateLoc].Value;
-                        if (!comboDateSelection.Items.Contains(returnData))
-                        {
-                            comboDateSelection.Items.Add(returnData);
-                            fDateCounter.Add(returnData, 1);
-                        }
-                        else
-                            fDateCounter[returnData]++;
-                    }
-                    currRow++;
-                }
-            }
-            comboDateSelection.SelectedItem = null;
-            comboDateSelection.SelectedText = "--Please select a date--";
-        }
-
-        private void SendPatientToMailMerge(ref string inFirstLast, ref string inAddress, ref string inCityState, 
-            ref int inWordRow, ref int inColumn, ref Word.Table inCurrTable)
-        {
-            Word.WdParagraphAlignment alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
-
-            Word.Cell cellName = inCurrTable.Cell(inWordRow, inColumn);
-            cellName.Range.Text = inFirstLast;
-            cellName.Range.ParagraphFormat.Alignment = alignment;
-
-            Word.Cell cellAddress = inCurrTable.Cell(inWordRow + 1, inColumn);
-            cellAddress.Range.Text = inAddress;
-            cellAddress.Range.ParagraphFormat.Alignment = alignment;
-
-            Word.Cell cellCityStateZip = inCurrTable.Cell(inWordRow + 2, inColumn);
-            cellCityStateZip.Range.Text = inCityState;
-            cellCityStateZip.Range.ParagraphFormat.Alignment = alignment;
-        }
-
-        // Create table for newly created word doc representing printing labels based on number of entries found on load
-        private Word.Table CreateTableForWord(ref Word.Document inCurrentDoc, ref DateTime inSelectedTime)
-        {
-            object start = 0;
-            object end = 0;
-            int numColumns = 3;
-            int extraRow = fDateCounter[inSelectedTime] % 3 == 0 ? 0 : 1;
-            int numRows = ((fDateCounter[inSelectedTime] / 3) + extraRow)*4;
-            Word.Range tableLocation = inCurrentDoc.Range(ref start, ref end);
-            tableLocation.Paragraphs.LineSpacingRule = Word.WdLineSpacing.wdLineSpaceSingle;
-            tableLocation.Paragraphs.SpaceBefore = 0;
-            tableLocation.Paragraphs.SpaceAfter = 4.5f;
-            Word.Table outWordTable = inCurrentDoc.Tables.Add(tableLocation, numRows, numColumns);
-            outWordTable.Spacing = 0;
-            return outWordTable;
-        }
-
-        private void IteratePatientsForMailMerge(Word.Application inApp)
-        {
-            if (m_existingWkBook != null)
-            {
-                Excel.Worksheet currSheet = m_existingWkBook.Sheets["Patient_Registration MASTER"] ;
-                int currExcelRow = 2; // always start on the second row
-                int currWordRow = 1;
-                int currWordColumn = 1;
-                Word.Document currDoc = inApp.Documents.Add();
-
-                // Setup margins for Avery labels. TODO: Have UI for other kinds of mailing labels.
-                currDoc.PageSetup.LeftMargin = inApp.InchesToPoints(0.25f);
-                currDoc.PageSetup.TopMargin = inApp.InchesToPoints(0.8f);
-                currDoc.PageSetup.RightMargin = inApp.InchesToPoints(0.125f);
-                currDoc.PageSetup.BottomMargin = inApp.InchesToPoints(0.4f);
-
-                DateTime selectedDate = DateTime.Parse(comboDateSelection.SelectedItem.ToString());
-                Word.Table currDocTable = CreateTableForWord(ref currDoc, ref selectedDate);
-                while ((currSheet.Cells[currExcelRow, kLastNameLoc]).Text != "")
-                {
-                    // if the patient's return date matches, send to MailMerge
-                    if ((currSheet.Cells[currExcelRow, kReturnDateLoc]).Text != "")
-                    {
-                        DateTime returnData = currSheet.Cells[currExcelRow, kReturnDateLoc].Value;
-                        if (selectedDate.Equals(returnData))
-                        {
-                            string firstLastNameStr = currSheet.Cells[currExcelRow, kFirstNameLoc].Value + " "
-                                + currSheet.Cells[currExcelRow, kLastNameLoc].Value;
-
-                            string addressStr = currSheet.Cells[currExcelRow, kAddressLoc].Value;
-
-                            string cellCityStateZip = currSheet.Cells[currExcelRow, kCityLoc].Value + ", "
-                                + currSheet.Cells[currExcelRow, kStateLoc].Value
-                                + " " + currSheet.Cells[currExcelRow, kZipLoc].Value;
-
-                            SendPatientToMailMerge(ref firstLastNameStr, ref addressStr, ref cellCityStateZip,
-                                ref currWordRow, ref currWordColumn, ref currDocTable);
-
-                            currWordColumn++;
-
-                            if (currWordColumn == 4)
-                            {
-                                currWordColumn = 1;
-                                currWordRow += 4;
-                            }
-                        }
-                    }
-                    currExcelRow++;
-                }
-            }
-        }
-
-        private void btnSendToMailMerge_Click(object sender, EventArgs e)
-        {            
-            var wordApp = new Word.Application();
-            IteratePatientsForMailMerge(wordApp);
-            wordApp.Visible = true;
-            this.Close();
-            fDateCounter = null; // collect memory for the allocated dictionary
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private Excel.Workbook m_existingWkBook = null; // passed from main dialog
-
-        private const int kCurrDateLoc = 1;
+        // Locations constants (keeping your existing mapping)
         private const int kFirstNameLoc = 2;
         private const int kLastNameLoc = 3;
         private const int kAddressLoc = 7;
         private const int kCityLoc = 8;
         private const int kStateLoc = 9;
         private const int kZipLoc = 10;
+        private const int kReturnDateLoc = 18;
         private const int kHomePhoneLoc = 11;
         private const int kCellPhoneLoc = 12;
-        private const int kReturnDateLoc = 18;
 
-        Generics.Dictionary<DateTime, int> fDateCounter; 
+        public MailMergeDialog()
+        {
+            InitializeComponent();
+        }
+
+        public MailMergeDialog(string filePath)
+        {
+            InitializeComponent();
+            m_filePath = filePath;
+        }
+
+        private void MailMergeDialog_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                fMonthCounter.Clear();
+
+                using (var workbook = new XLWorkbook(m_filePath))
+                {
+                    var worksheet = workbook.Worksheet(workSheetName);
+                    var rows = worksheet.RowsUsed().Skip(1);
+
+                    foreach (var row in rows)
+                    {
+                        var cellValue = row.Cell(kReturnDateLoc).Value;
+                        if (cellValue.IsDateTime)
+                        {
+                            // Group by "MMMM yyyy" (e.g., February 2026)
+                            string monthYear = cellValue.GetDateTime().ToString("MMMM yyyy");
+
+                            if (!fMonthCounter.ContainsKey(monthYear))
+                                fMonthCounter.Add(monthYear, 1);
+                            else
+                                fMonthCounter[monthYear]++;
+                        }
+                    }
+                }
+
+                // Sort by Date naturally (descending) then fill the combo box
+                var sortedMonths = fMonthCounter.Keys
+                    .OrderByDescending(m => DateTime.Parse(m))
+                    .ToList();
+
+                comboDateSelection.Items.Clear();
+                foreach (var month in sortedMonths)
+                {
+                    comboDateSelection.Items.Add(month);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading months: " + ex.Message);
+            }
+
+            comboDateSelection.Text = "--Select Month/Year--";
+        }
+
+        private void IteratePatientsForPostcards(Word.Application inApp)
+        {
+            if (comboDateSelection.SelectedIndex == -1) return;
+
+            string selectedMonthYear = comboDateSelection.SelectedItem.ToString();
+            Word.Document currDoc = inApp.Documents.Add();
+
+            // Standard Page Setup for Postcards (or standard letter if printing multiple per sheet)
+            currDoc.PageSetup.TopMargin = inApp.InchesToPoints(0.75f);
+            currDoc.PageSetup.LeftMargin = inApp.InchesToPoints(0.75f);
+            currDoc.PageSetup.RightMargin = inApp.InchesToPoints(0.75f);
+
+            using (var workbook = new XLWorkbook(m_filePath))
+            {
+                var worksheet = workbook.Worksheet(workSheetName);
+                var rows = worksheet.RowsUsed().Skip(1);
+                bool firstEntry = true;
+
+                foreach (var row in rows)
+                {
+                    var cellValue = row.Cell(kReturnDateLoc).Value;
+                    if (cellValue.IsDateTime && cellValue.GetDateTime().ToString("MMMM yyyy") == selectedMonthYear)
+                    {
+                        // Add a page break for every patient except the first
+                        if (!firstEntry)
+                        {
+                            currDoc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                        }
+
+                        string firstName = row.Cell(kFirstNameLoc).Value.ToString();
+                        string lastName = row.Cell(kLastNameLoc).Value.ToString();
+                        string address = row.Cell(kAddressLoc).Value.ToString();
+                        string cityStateZip = $"{row.Cell(kCityLoc).Value}, {row.Cell(kStateLoc).Value} {row.Cell(kZipLoc).Value}";
+                        string phone = row.Cell(kHomePhoneLoc).Value.ToString();
+
+                        // Build the Postcard Content
+                        Word.Range rng = currDoc.Content;
+                        rng.Collapse(Word.WdCollapseDirection.wdCollapseEnd);
+
+                        // Heading
+                        rng.InsertAfter($"Lenita N. Gorrell, M.D.\r");
+                        rng.InsertAfter($"7845 Oakwood Road, Suite 203\r");
+                        rng.InsertAfter($"Glen Burnie, MD 21061\r");
+                        rng.InsertAfter($"410-768-8214\r\r");
+
+                        // Message Content
+                        rng.InsertAfter($"Dear {firstName},\r\r");
+
+                        string bodyText = "We want you back! Our records show that it has been _____________ " +
+                                          "since your last eye exam. Please call our office to make an " +
+                                          "appointment at your convenience. We'd love to see you again.";
+
+                        rng.InsertAfter(bodyText);
+
+                        // Format the text (Optional: Arial, 11pt)
+                        rng.Font.Name = "Arial";
+                        rng.Font.Size = 11;
+
+                        firstEntry = false;
+                    }
+                }
+            }
+        }
+
+        private void SendPatientToMailMerge(string inName, string inAddr, string inCSZ, int inRow, int inCol, Word.Table inTable)
+        {
+            // Use \v (vertical tab) for a new line without a paragraph break
+            inTable.Cell(inRow, inCol).Range.Text = $"{inName}\v{inAddr}\v{inCSZ}";
+        }
+
+        // Create table for newly created word doc representing printing labels based on number of entries found on load
+        private Word.Table CreateTableForWord(ref Word.Document inDoc, string selectedMonth, Word.Application inApp)
+        {
+            int numColumns = 3;
+            int patientCount = fMonthCounter[selectedMonth]; // Count for the whole month
+            int numRows = (int)Math.Ceiling(patientCount / 3.0);
+
+            Word.Table outTable = inDoc.Tables.Add(inDoc.Range(), numRows, numColumns);
+
+            outTable.Rows.HeightRule = Word.WdRowHeightRule.wdRowHeightExactly;
+            outTable.Rows.Height = inApp.InchesToPoints(1.0f); // Exactly 1 inch for 3-col
+
+            outTable.Range.ParagraphFormat.SpaceAfter = 0;
+            outTable.TopPadding = 5;
+
+            return outTable;
+        }
+
+        private void IteratePatientsForMailMerge(Word.Application inApp)
+        {
+            if (comboDateSelection.SelectedIndex == -1) return;
+
+            string selectedMonthYear = comboDateSelection.SelectedItem.ToString();
+            Word.Document currDoc = inApp.Documents.Add();
+
+            // Setup Page Margins
+            currDoc.PageSetup.TopMargin = inApp.InchesToPoints(0.5f);
+            currDoc.PageSetup.BottomMargin = inApp.InchesToPoints(0.5f);
+            currDoc.PageSetup.LeftMargin = inApp.InchesToPoints(0.19f);
+            currDoc.PageSetup.RightMargin = inApp.InchesToPoints(0.19f);
+
+            Word.Table currDocTable = CreateTableForWord(ref currDoc, selectedMonthYear, inApp);
+
+            using (var workbook = new XLWorkbook(m_filePath))
+            {
+                var worksheet = workbook.Worksheet(workSheetName);
+                var rows = worksheet.RowsUsed().Skip(1);
+
+                int currWordRow = 1;
+                int currWordColumn = 1;
+
+                foreach (var row in rows)
+                {
+                    var cellValue = row.Cell(kReturnDateLoc).Value;
+                    if (cellValue.IsDateTime)
+                    {
+                        DateTime rowDate = cellValue.GetDateTime();
+
+                        // Check if this row matches the selected Month and Year
+                        if (rowDate.ToString("MMMM yyyy") == selectedMonthYear)
+                        {
+                            string name = $"{row.Cell(kFirstNameLoc).Value} {row.Cell(kLastNameLoc).Value}";
+                            string address = row.Cell(kAddressLoc).Value.ToString();
+                            string cityStateZip = $"{row.Cell(kCityLoc).Value}, {row.Cell(kStateLoc).Value} {row.Cell(kZipLoc).Value}";
+
+                            SendPatientToMailMerge(name, address, cityStateZip, currWordRow, currWordColumn, currDocTable);
+
+                            currWordColumn++;
+                            if (currWordColumn > 3)
+                            {
+                                currWordColumn = 1;
+                                currWordRow++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnSendToMailMerge_Click(object sender, EventArgs e)
+        {
+            var wordApp = new Word.Application();
+            IteratePatientsForMailMerge(wordApp);
+            wordApp.Visible = true;
+        }
+
+        
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnPrintPostcards_Click(object sender, EventArgs e)
+        {
+            var wordApp = new Word.Application();
+            IteratePatientsForPostcards(wordApp);
+            wordApp.Visible = true;
+            this.Close();
+        }
     }
 }

@@ -7,148 +7,119 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
+using System.IO;
+using ClosedXML.Excel;
 
 namespace PatientRegistrationApp
 {
     public partial class PatientRegistrationApp : Form
     {
+
+        private string m_FileStr;
+        private bool mb_initialized = false;
+
         public PatientRegistrationApp()
         {
-            m_FileStr = AppDomain.CurrentDomain.BaseDirectory + "Patient Registration.xlsx";
-            try
+            InitializeComponent();
+            m_FileStr = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Patient Registration.xlsx");
+
+            // Check if file exists; if not, ask user to specify file
+            if (!File.Exists(m_FileStr))
             {
-                InitializeComponent(); // initialize app
-                mb_initialized = true;
-                m_runningApp = new Excel.Application();
-                m_runningApp.Visible = false;
-                m_existingWkBook = m_runningApp.Workbooks.Open(m_FileStr);
-                if (!m_existingWkBook.ReadOnly)
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
-                    InitializeComponent(); // initialize app
-                    mb_initialized = true;
+                    openFileDialog.Filter = "Excel Files (*.xlsx; *.xls)|*.xlsx;*.xls|All files (*.*)|*.*";
+                    openFileDialog.Title = "Please select the missing Excel file";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        m_FileStr = openFileDialog.FileName;
+                        mb_initialized = true;
+                    } 
+                    else
+                    {
+                        mb_initialized = false;
+                        MessageBox.Show("File selection was cancelled. Application cannot proceed.");
+                    }
+
                 }
-                else
-                {
-                    m_runningApp.Quit();
-                    Form prompt = new AlertDialog("The Patient Registration excel file is read-only. " +
-                        "Please configure this file correctly and reopen the application again.");
-                    prompt.ShowDialog();
-                }
+ 
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.ToString());
-                m_runningApp.Quit();
-                Form prompt = new AlertDialog("Failed to find Patient Registration excel file. " +
-                    "Please make sure that the excel file is in the same folder as the application.");
-                prompt.ShowDialog();
-                mb_initialized = false;
+                mb_initialized = true;
             }
         }
 
         public bool IsInitialized() { return mb_initialized; }
 
-        private bool OpenExcelFileOnAccessFailure(bool inVisible, bool inShowDialog=true)
+        private void ExecuteExcelAction(Action<XLWorkbook> action)
         {
-            bool bOutSuccess = false;
             try
             {
-                if (m_runningApp.Workbooks.Count == 0)
+                using (var workbook = new XLWorkbook(m_FileStr))
                 {
-                    m_runningApp.Visible = true;
-                    m_existingWkBook = m_runningApp.Workbooks.Open(m_FileStr);
-                    bOutSuccess = false;
+                    action(workbook);
+                    workbook.Save();
                 }
-                else
-                {
-                    m_runningApp.Visible = inVisible;
-                    bOutSuccess = true;
-                }
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("The file is currently open in another program. Please close it and try again.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                if (ex is InvalidCastException 
-                    || ex is System.Runtime.InteropServices.COMException)
-                {
-                    m_runningApp = new Excel.Application();
-                    m_runningApp.Visible = true;
-                    m_existingWkBook = m_runningApp.Workbooks.Open(m_FileStr);
-                    bOutSuccess = true;
-                }
-                else // can't open the doc anymore unfortunately. tell the user about this
-                {
-                    if (inShowDialog)
-                    {
-                        Form prompt = new AlertDialog("Failed to find Patient Registration excel file. " +
-                        "Please make sure that the excel file is in the same folder as the application.");
-                        prompt.ShowDialog();
-                    }
-                }
+                MessageBox.Show("Error: " + ex.Message);
             }
-            return bOutSuccess;
         }
+
 
         private void btnSendMailmerge_Click(object sender, EventArgs e)
         {
-            if (m_existingWkBook != null && OpenExcelFileOnAccessFailure(mb_ExcelDocumentIsOpen))
-            {
-                Form mailMergeDialog = new MailMergeDialog(m_existingWkBook);
-                mailMergeDialog.ShowDialog();
-            }
+            Form mailMergeDialog = new MailMergeDialog(m_FileStr);
+            mailMergeDialog.ShowDialog();
         }
 
         private void btnOpenXls_Click(object sender, EventArgs e)
         {
-            if (m_existingWkBook != null && OpenExcelFileOnAccessFailure(mb_ExcelDocumentIsOpen))
-            {
-                mb_ExcelDocumentIsOpen ^= true;
-                OpenExcelFileOnAccessFailure(mb_ExcelDocumentIsOpen);
-            }
+            System.Diagnostics.Process.Start(m_FileStr);
         }
+
 
         private void btnInputPat_Click(object sender, EventArgs e)
         {
-            if (m_existingWkBook != null && OpenExcelFileOnAccessFailure(mb_ExcelDocumentIsOpen))
-            {
-                OpenExcelFileOnAccessFailure(mb_ExcelDocumentIsOpen);
-                Form addPatientDialog = new AddPatientDialog(m_existingWkBook);
-                addPatientDialog.ShowDialog();
-            }
+            Form addPatientDialog = new AddPatientDialog(m_FileStr);
+            addPatientDialog.ShowDialog();
         }
+
 
         private void btnDeletePat_Click(object sender, EventArgs e)
         {
-            if (m_existingWkBook != null && OpenExcelFileOnAccessFailure(mb_ExcelDocumentIsOpen))
-            {
-                OpenExcelFileOnAccessFailure(mb_ExcelDocumentIsOpen);
-                Form deletePatientDialog = new DeletePatientDialog(m_existingWkBook);
-                deletePatientDialog.ShowDialog();
-            }
+            Form deletePatientDialog = new DeletePatientDialog(m_FileStr);
+            deletePatientDialog.ShowDialog();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            string dialogText = "Written and designed by Andrew Gorbaty." 
+            string dialogText = "Written and designed by Andrew Gorbaty and Anish Boddu." 
                  + "This software is distributed under an 'as-is' license, which allows any developer to modify its source code without permission from its original author.";
             Form prompt = new AlertDialog(dialogText);
             prompt.ShowDialog();
         }
 
-        protected override void OnClosed(EventArgs e)
+        private void btnEditPat_Click(object sender, EventArgs e)
         {
-            if (OpenExcelFileOnAccessFailure(false, false))
-            {
-                m_existingWkBook.Close();
-                m_runningApp.Quit();
-            }
+            Form editPatientDialog = new EditPatientDialog(m_FileStr);
+            editPatientDialog.ShowDialog();
         }
 
-        private bool mb_initialized = false;
-        private bool mb_ExcelDocumentIsOpen = false;
-        private Excel.Workbook m_existingWkBook = null;
-        Excel.Application m_runningApp = null;
-        private string m_FileStr = "";
+        protected override void OnClosed(EventArgs e) {base.OnClosed(e);}
+
+        
+        private void PatientRegistrationApp_Load(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
