@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace PatientRegistrationApp
@@ -8,7 +9,9 @@ namespace PatientRegistrationApp
     public partial class AddPatientDialog : Form
     {
 
-        private string m_filePath;
+        private string mFilePath;
+        // determines what sheet to use
+        private string workSheetName = "Patient_Registration MASTER";
 
         enum DialogDataValid
         {
@@ -16,13 +19,14 @@ namespace PatientRegistrationApp
             eIncompleteForm,
             eBadZipCodeFormat,
             eBadStateFormat,
-            eBadDateFormat
+            eBadDateFormat,
+            eNotesTooLong
         }
 
         public AddPatientDialog(string filePath)
         {
             InitializeComponent();
-            m_filePath = filePath;
+            mFilePath = filePath;
         }
 
 
@@ -31,13 +35,36 @@ namespace PatientRegistrationApp
             this.Close();
         }
 
+        private bool IsDuplicatePatient()
+        {
+            using (var workbook = new XLWorkbook(mFilePath))
+            {
+                var worksheet = workbook.Worksheet(workSheetName);
+                var rows = worksheet.RowsUsed().Skip(1); // Skip header
+
+                foreach (var row in rows)
+                {
+                    // Compare all 6 fields (Case-Insensitive)
+                    bool match = row.Cell(kFirstNameLoc).Value.ToString().Trim().Equals(textFirstName.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kLastNameLoc).Value.ToString().Trim().Equals(textLastName.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kAddressLoc).Value.ToString().Trim().Equals(textAddress.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kCityLoc).Value.ToString().Trim().Equals(textCity.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kStateLoc).Value.ToString().Trim().Equals(textState.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kZipLoc).Value.ToString().Trim().Equals(textZip.Text.Trim(), StringComparison.OrdinalIgnoreCase);
+
+                    if (match) return true;
+                }
+            }
+            return false;
+        }
+
         private void SendDialogDataToExcel()
         {
             try
             {
-                using (var workbook = new XLWorkbook(m_filePath))
+                using (var workbook = new XLWorkbook(mFilePath))
                 {
-                    var worksheet = workbook.Worksheet("Patient_Registration MASTER");
+                    var worksheet = workbook.Worksheet(workSheetName);
 
                     int lastRow = worksheet.LastRowUsed()?.RowNumber() ?? 0;
                     int currRow = lastRow + 1;
@@ -51,13 +78,27 @@ namespace PatientRegistrationApp
                     worksheet.Cell(currRow, kZipLoc).Value = textZip.Text;
                     worksheet.Cell(currRow, kHomePhoneLoc).Value = textHomePhone.Text;
                     worksheet.Cell(currRow, kCellPhoneLoc).Value = textCellPhone.Text;
+                    worksheet.Cell(currRow, kNotesLoc).Value = textBoxNotes.Text;
+                    worksheet.Cell(currRow, kInsuranceLoc).Value = textInsurance.Text;
 
                     if (DateTime.TryParse(textReturnDate.Text, out DateTime parsedDate))
                     {
-                        worksheet.Cell(currRow, kReturnDateLoc).Value = parsedDate; // Saves as a true Date
+                        var dateCell = worksheet.Cell(currRow, kReturnDateLoc);
+
+                        // Clear validation issues
+                        dateCell.Clear(XLClearOptions.DataValidation);
+
+                        // Assign the value
+                        dateCell.Value = parsedDate;
+
+                        // Optional: Ensure the cell style is set to a Date format
+                        dateCell.Style.DateFormat.Format = "mm/dd/yyyy";
+                    } else
+                    {
+                        MessageBox.Show("Cannot parse the specified date for row {x}. Please report an issue to the developers immediately");
                     }
 
-                    workbook.Save(); // Saves the file instantly
+                        workbook.Save(); // Saves the file instantly
                 }
             }
             catch (IOException)
@@ -100,28 +141,55 @@ namespace PatientRegistrationApp
                 if (!DateTime.TryParse(textReturn, out res))
                     outValidData = DialogDataValid.eBadDateFormat;
             }
-            
+
+            if (textBoxNotes.Text.Length > 1000)
+            {
+                return DialogDataValid.eNotesTooLong;
+            }
+
             return outValidData;
         }
 
         private void btnAccept_Click(object sender, EventArgs e)
         {
-            // TODO: Check if workbook is read-only
+            // 1. First, check if basic data formats are valid
             DialogDataValid dataValid = IsInputDataValid();
+
             if (dataValid == DialogDataValid.eNoError)
             {
-                // All data is valid. Send to Excel spreadsheet
+                // 2. Data is valid, now check for duplicates in the Excel sheet
+                if (IsDuplicatePatient())
+                {
+                    string warnMsg = $"A patient with the following details already exists:\n\n" +
+                                     $"{textFirstName.Text} {textLastName.Text}\n" +
+                                     $"{textAddress.Text}, {textCity.Text}\n\n" +
+                                     "Are you sure you want to add this duplicate entry?";
+
+                    // Show standard Windows warning with Yes/No buttons
+                    DialogResult result = MessageBox.Show(warnMsg, "Duplicate Detected",
+                                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    // If they click 'No', exit the method and let them edit the form
+                    if (result == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+
+                // 3. Either no duplicate was found, or user chose to proceed anyway
                 SendDialogDataToExcel();
-                this.Close(); // close dialog after sending data to excel
+                this.Close();
             }
             else
             {
-                // TODO: Make better dialog text.
+                // Handle validation errors using your existing AlertDialog
                 string dialogText = dataValid == DialogDataValid.eIncompleteForm ? "The information is not complete. Please complete all specified fields."
                     : dataValid == DialogDataValid.eBadStateFormat ? "The State format is incorrect. Please make sure the State is abbreviated."
                     : dataValid == DialogDataValid.eBadZipCodeFormat ? "The Zip Code format is incorrect. Please make sure the Zip Code is a 5 digit number."
                     : dataValid == DialogDataValid.eBadDateFormat ? "The Return Date format is incorrect. Please type in the return date in the MM/DD/YYYY format."
-                    : "Something else has gone wrong. Please make sure the excel document is open.";
+                    : dataValid == DialogDataValid.eNotesTooLong ? "Too many characters in notes column. Please shorten the note and try again."
+                    : "Something else has gone wrong. Please make sure the excel document is writable.";
+
                 Form prompt = new AlertDialog(dialogText);
                 prompt.ShowDialog();
             }
@@ -138,8 +206,25 @@ namespace PatientRegistrationApp
         private const int kHomePhoneLoc = 11;
         private const int kCellPhoneLoc = 12;
         private const int kReturnDateLoc = 18;
+        private const int kNotesLoc = 19;
+        private const int kInsuranceLoc = 20;
 
         private void AddPatientDialog_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelReturnDate_Click(object sender, EventArgs e)
         {
 
         }

@@ -73,7 +73,7 @@ namespace PatientRegistrationApp
             }
         }
 
-        // TODO: this method will require a form update
+
         private void btnSendMailmerge_Click(object sender, EventArgs e)
         {
             Form mailMergeDialog = new MailMergeDialog(m_FileStr);
@@ -85,14 +85,14 @@ namespace PatientRegistrationApp
             System.Diagnostics.Process.Start(m_FileStr);
         }
 
-        // TODO: this method will require a form update
+
         private void btnInputPat_Click(object sender, EventArgs e)
         {
             Form addPatientDialog = new AddPatientDialog(m_FileStr);
             addPatientDialog.ShowDialog();
         }
 
-        // TODO: This method will also need a form update
+
         private void btnDeletePat_Click(object sender, EventArgs e)
         {
             Form deletePatientDialog = new DeletePatientDialog(m_FileStr);
@@ -101,10 +101,16 @@ namespace PatientRegistrationApp
 
         private void button5_Click(object sender, EventArgs e)
         {
-            string dialogText = "Written and designed by Andrew Gorbaty." 
+            string dialogText = "Written and designed by Andrew Gorbaty and Anish Boddu." 
                  + "This software is distributed under an 'as-is' license, which allows any developer to modify its source code without permission from its original author.";
             Form prompt = new AlertDialog(dialogText);
             prompt.ShowDialog();
+        }
+
+        private void btnEditPat_Click(object sender, EventArgs e)
+        {
+            Form editPatientDialog = new EditPatientDialog(m_FileStr);
+            editPatientDialog.ShowDialog();
         }
 
         protected override void OnClosed(EventArgs e) {base.OnClosed(e);}
@@ -114,5 +120,6 @@ namespace PatientRegistrationApp
         {
 
         }
+
     }
 }
