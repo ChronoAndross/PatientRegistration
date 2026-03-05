@@ -16,8 +16,10 @@ namespace PatientRegistrationApp
     {
 
         private string m_filePath;
+        private string m_currentUser; // Store the logged-in user
+        private string m_logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationLog.txt");
         private List<PatientItem> allPatients = new List<PatientItem>();
-        private bool m_isFiltering = false; // Prevents UI flicker while searching
+        private bool m_isFiltering = false;
 
         private const int kCurrDateLoc = 1;
         private const int kFirstNameLoc = 2;
@@ -43,10 +45,22 @@ namespace PatientRegistrationApp
             eNoPatientSelected
         }
 
-        public EditPatientDialog(string filePath)
+        public EditPatientDialog(string filePath, string currentUser)
         {
             InitializeComponent();
             m_filePath = filePath;
+            m_currentUser = currentUser;
+        }
+
+        // Helper method for logging
+        private void LogAction(string action, string details)
+        {
+            try
+            {
+                string logEntry = $"[{DateTime.Now:MM/dd/yyyy HH:mm:ss}] User: {m_currentUser} | Action: {action} | Details: {details}";
+                File.AppendAllText(m_logPath, logEntry + Environment.NewLine);
+            }
+            catch { /* Fail silently */ }
         }
 
         private void EditPatientDialog_Load(object sender, EventArgs e)
@@ -227,11 +241,23 @@ namespace PatientRegistrationApp
                             worksheet.Cell(currRow, kReturnDateLoc).Value = parsedDate;
 
                         workbook.Save();
+
+                        LogAction("RECORD_EDITED", $"Updated details for patient: {selected.Name} (Row {currRow})");
+
                         MessageBox.Show("Patient updated successfully!");
                         this.Close();
                     }
                 }
-                catch (IOException) { MessageBox.Show("Close the Excel file and try again."); }
+                catch (IOException)
+                {
+                    LogAction("ERROR", $"Failed to edit {selected.Name}: File locked.");
+                    MessageBox.Show("Close the Excel file and try again.");
+                }
+                catch (Exception ex)
+                {
+                    LogAction("ERROR", $"Critical error editing {selected.Name}: {ex.Message}");
+                    MessageBox.Show("An error occurred: " + ex.Message);
+                }
             }
             else
             {
@@ -244,8 +270,10 @@ namespace PatientRegistrationApp
                 : dataValid == DialogDataValid.eNotesTooLong ? "Too many characters in notes column. Please shorten the note and try again."
                 : "Something else has gone wrong. Please make sure the excel document is open.";
 
-                    Form prompt = new AlertDialog(dialogText);
-                    prompt.ShowDialog();
+                string errorType = dataValid.ToString();
+                LogAction("VALIDATION_FAILED", $"Edit failed for {(selected != null ? selected.Name : "Unknown")}. Reason: {errorType}");
+                Form prompt = new AlertDialog(dialogText);
+                prompt.ShowDialog();
             }
             
         }

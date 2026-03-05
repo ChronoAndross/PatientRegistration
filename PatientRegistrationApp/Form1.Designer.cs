@@ -34,6 +34,7 @@
             this.btnSendMailmerge = new System.Windows.Forms.Button();
             this.btnAbout = new System.Windows.Forms.Button();
             this.btnEditPat = new System.Windows.Forms.Button();
+            this.btnViewLogs = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnInputPat
@@ -82,10 +83,10 @@
             // 
             // btnAbout
             // 
-            this.btnAbout.Location = new System.Drawing.Point(230, 182);
+            this.btnAbout.Location = new System.Drawing.Point(220, 182);
             this.btnAbout.Margin = new System.Windows.Forms.Padding(2);
             this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(104, 31);
+            this.btnAbout.Size = new System.Drawing.Size(55, 31);
             this.btnAbout.TabIndex = 4;
             this.btnAbout.Text = "About";
             this.btnAbout.UseVisualStyleBackColor = true;
@@ -102,12 +103,24 @@
             this.btnEditPat.UseVisualStyleBackColor = true;
             this.btnEditPat.Click += new System.EventHandler(this.btnEditPat_Click);
             // 
+            // btnViewLogs
+            // 
+            this.btnViewLogs.Location = new System.Drawing.Point(288, 182);
+            this.btnViewLogs.Margin = new System.Windows.Forms.Padding(2);
+            this.btnViewLogs.Name = "btnViewLogs";
+            this.btnViewLogs.Size = new System.Drawing.Size(55, 31);
+            this.btnViewLogs.TabIndex = 6;
+            this.btnViewLogs.Text = "Logs";
+            this.btnViewLogs.UseVisualStyleBackColor = true;
+            this.btnViewLogs.Click += new System.EventHandler(this.btnViewLogs_Click);
+            // 
             // PatientRegistrationApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(396, 268);
+            this.Controls.Add(this.btnViewLogs);
             this.Controls.Add(this.btnEditPat);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.btnSendMailmerge);
@@ -130,6 +143,7 @@
         private System.Windows.Forms.Button btnSendMailmerge;
         private System.Windows.Forms.Button btnAbout;
         private System.Windows.Forms.Button btnEditPat;
+        private System.Windows.Forms.Button btnViewLogs;
     }
 }
 
