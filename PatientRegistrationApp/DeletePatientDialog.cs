@@ -149,9 +149,9 @@ namespace PatientRegistrationApp
                     MessageBox.Show("Patient removed successfully.");
                     this.Close();
                 }
-                catch (IOException)
+                catch (IOException ex)
                 {
-                    LogAction("ERROR", $"Failed to delete {selected.Name}: File locked.");
+                    LogAction("ERROR", $"Failed to delete {selected.Name}: File locked, error: {ex.Message}");
                     MessageBox.Show("The file is open in another program. Please close it first.");
                 }
                 catch (Exception ex)
