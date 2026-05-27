@@ -12,6 +12,8 @@ namespace PatientRegistrationApp
         private string mFilePath;
         // determines what sheet to use
         private string workSheetName = "Patient_Registration MASTER";
+        private string mCurrentUser; // Store the logged-in user
+        private string mLogPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationLog.txt");
 
         enum DialogDataValid
         {
@@ -23,12 +25,12 @@ namespace PatientRegistrationApp
             eNotesTooLong
         }
 
-        public AddPatientDialog(string filePath)
+        public AddPatientDialog(string filePath, string currentUser)
         {
             InitializeComponent();
             mFilePath = filePath;
+            mCurrentUser = currentUser;
         }
-
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
@@ -60,6 +62,7 @@ namespace PatientRegistrationApp
 
         private void SendDialogDataToExcel()
         {
+            string patientName = $"{textFirstName.Text} {textLastName.Text}";
             try
             {
                 using (var workbook = new XLWorkbook(mFilePath))
@@ -99,11 +102,19 @@ namespace PatientRegistrationApp
                     }
 
                         workbook.Save(); // Saves the file instantly
+                        Utils.LogAction("RECORD_CREATED", $"Successfully added patient: {patientName}", mCurrentUser, mLogPath);
+
                 }
             }
-            catch (IOException)
+            catch (IOException ioEx)
             {
-                MessageBox.Show("File is currently open in another program, Close the file and try again");
+                Utils.LogAction("ERROR", $"Failed to add {patientName}: File locked by another process, error: {ioEx.Message}", mCurrentUser, mLogPath);
+                MessageBox.Show("File is currently open in another program. Close the file and try again.");
+            }
+            catch (Exception ex)
+            {
+                Utils.LogAction("ERROR", $"Critical Error adding {patientName}: {ex.Message}", mCurrentUser, mLogPath);
+                MessageBox.Show("An unexpected error occurred. Check logs for details.");
             }
         }
 
@@ -169,11 +180,13 @@ namespace PatientRegistrationApp
                     DialogResult result = MessageBox.Show(warnMsg, "Duplicate Detected",
                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                    // If they click 'No', exit the method and let them edit the form
                     if (result == DialogResult.No)
                     {
+                        Utils.LogAction("DUPLICATE_CANCELLED", $"User declined to add duplicate: {textFirstName.Text} {textLastName.Text}", mCurrentUser, mLogPath);
                         return;
                     }
+
+                    Utils.LogAction("DUPLICATE_OVERRIDE", $"User approved duplicate entry for: {textFirstName.Text} {textLastName.Text}", mCurrentUser, mLogPath);
                 }
 
                 // 3. Either no duplicate was found, or user chose to proceed anyway
@@ -190,6 +203,7 @@ namespace PatientRegistrationApp
                     : dataValid == DialogDataValid.eNotesTooLong ? "Too many characters in notes column. Please shorten the note and try again."
                     : "Something else has gone wrong. Please make sure the excel document is writable.";
 
+                Utils.LogAction("VALIDATION_FAILED", $"Form error: {dataValid} for entry: {textFirstName.Text} {textLastName.Text}", mCurrentUser, mLogPath);
                 Form prompt = new AlertDialog(dialogText);
                 prompt.ShowDialog();
             }

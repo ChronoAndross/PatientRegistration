@@ -31,8 +31,8 @@
             this.btnSendToMailMerge = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.labelDateSelection = new System.Windows.Forms.Label();
-            this.comboDateSelection = new System.Windows.Forms.ComboBox();
             this.btnPrintPostcards = new System.Windows.Forms.Button();
+            this.comboDateSelection = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // btnSendToMailMerge
@@ -60,21 +60,32 @@
             // labelDateSelection
             // 
             this.labelDateSelection.AutoSize = true;
-            this.labelDateSelection.Location = new System.Drawing.Point(58, 61);
+            this.labelDateSelection.Location = new System.Drawing.Point(39, 39);
             this.labelDateSelection.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelDateSelection.Name = "labelDateSelection";
             this.labelDateSelection.Size = new System.Drawing.Size(66, 13);
             this.labelDateSelection.TabIndex = 2;
             this.labelDateSelection.Text = "Select Date:";
             // 
+            // btnPrintPostcards
+            // 
+            this.btnPrintPostcards.Location = new System.Drawing.Point(173, 163);
+            this.btnPrintPostcards.Margin = new System.Windows.Forms.Padding(2);
+            this.btnPrintPostcards.Name = "btnPrintPostcards";
+            this.btnPrintPostcards.Size = new System.Drawing.Size(105, 31);
+            this.btnPrintPostcards.TabIndex = 4;
+            this.btnPrintPostcards.Text = "Send to Postcard";
+            this.btnPrintPostcards.UseVisualStyleBackColor = true;
+            this.btnPrintPostcards.Click += new System.EventHandler(this.btnPrintPostcards_Click);
+            // 
             // comboDateSelection
             // 
             this.comboDateSelection.FormattingEnabled = true;
-            this.comboDateSelection.Location = new System.Drawing.Point(138, 61);
-            this.comboDateSelection.Margin = new System.Windows.Forms.Padding(2);
+            this.comboDateSelection.Location = new System.Drawing.Point(42, 55);
             this.comboDateSelection.Name = "comboDateSelection";
-            this.comboDateSelection.Size = new System.Drawing.Size(140, 21);
-            this.comboDateSelection.TabIndex = 3;
+            this.comboDateSelection.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.comboDateSelection.Size = new System.Drawing.Size(152, 82);
+            this.comboDateSelection.TabIndex = 5;
             // 
             // btnPrintPostcards
             // 
@@ -92,8 +103,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(400, 234);
-            this.Controls.Add(this.btnPrintPostcards);
             this.Controls.Add(this.comboDateSelection);
+            this.Controls.Add(this.btnPrintPostcards);
             this.Controls.Add(this.labelDateSelection);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSendToMailMerge);
@@ -111,7 +122,7 @@
         private System.Windows.Forms.Button btnSendToMailMerge;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label labelDateSelection;
-        private System.Windows.Forms.ComboBox comboDateSelection;
         private System.Windows.Forms.Button btnPrintPostcards;
+        private System.Windows.Forms.ListBox comboDateSelection;
     }
 }

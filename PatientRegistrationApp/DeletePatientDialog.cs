@@ -9,24 +9,29 @@ namespace PatientRegistrationApp
     public partial class DeletePatientDialog : Form
     {
         private string m_filePath;
-        // determines what sheet to use
+        private string m_currentUser; // Store the logged-in user
         private string workSheetName = "Patient_Registration MASTER";
+        private string m_logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationLog.txt");
+
+
         private const int kFirstNameLoc = 2;
         private const int kLastNameLoc = 3;
 
         // Master list to hold all patients loaded from Excel
         private System.Collections.Generic.List<PatientItem> allPatients = new System.Collections.Generic.List<PatientItem>();
 
-        public DeletePatientDialog(string filePath)
+        public DeletePatientDialog(string filePath, string currentUser)
         {
             InitializeComponent();
             m_filePath = filePath;
+            m_currentUser = currentUser; // Assign from constructor
         }
 
         private void DeletePatientDialog_Load(object sender, EventArgs e)
         {
             LoadPatientsFromExcel();
         }
+
 
         private void LoadPatientsFromExcel()
         {
@@ -53,6 +58,7 @@ namespace PatientRegistrationApp
             }
             catch (Exception ex)
             {
+                Utils.LogAction("ERROR", $"Failed to load patient list for deletion: {ex.Message}", m_currentUser, m_logPath);
                 MessageBox.Show("Unable to load patients: " + ex.Message);
             }
         }
@@ -106,7 +112,16 @@ namespace PatientRegistrationApp
 
             if (selected != null)
             {
-                // Use the stored RowIndex instead of the ComboBox index!
+                // 1. Confirm deletion with the user
+                DialogResult confirm = MessageBox.Show($"Are you sure you want to permanently delete {selected.Name}?",
+                    "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (confirm == DialogResult.No)
+                {
+                    Utils.LogAction("DELETE_CANCELLED", $"User declined deletion of: {selected.Name}", m_currentUser, m_logPath);
+                    return;
+                }
+
                 int rowToDelete = selected.RowIndex;
 
                 try
@@ -117,12 +132,22 @@ namespace PatientRegistrationApp
                         worksheet.Row(rowToDelete).Delete();
                         workbook.Save();
                     }
+
+                    // 2. Log Success
+                    Utils.LogAction("RECORD_DELETED", $"Successfully removed patient: {selected.Name} (Original Row: {rowToDelete})", m_currentUser, m_logPath);
+
                     MessageBox.Show("Patient removed successfully.");
                     this.Close();
                 }
-                catch (IOException)
+                catch (IOException ex)
                 {
+                    Utils.LogAction("ERROR", $"Failed to delete {selected.Name}: File locked, error: {ex.Message}", m_currentUser, m_logPath);
                     MessageBox.Show("The file is open in another program. Please close it first.");
+                }
+                catch (Exception ex)
+                {
+                    Utils.LogAction("ERROR", $"Critical error during deletion of {selected.Name}: {ex.Message}", m_currentUser, m_logPath);
+                    MessageBox.Show("An error occurred: " + ex.Message);
                 }
             }
             else

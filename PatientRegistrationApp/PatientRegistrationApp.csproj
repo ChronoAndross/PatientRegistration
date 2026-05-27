@@ -6,6 +6,14 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{01356B07-0F30-4432-97E3-40AA8294527E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
     <RootNamespace>PatientRegistrationApp</RootNamespace>
     <AssemblyName>PatientRegistrationApp</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -16,15 +24,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>C:\Users\marna\Downloads\setup\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationRevision>9</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -128,6 +128,7 @@
     <Compile Include="AlertDialog.Designer.cs">
       <DependentUpon>AlertDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
     <Compile Include="DeletePatientDialog.cs">
       <SubType>Form</SubType>
     </Compile>
