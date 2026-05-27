@@ -83,38 +83,6 @@ namespace PatientRegistrationApp
 
         public bool IsInitialized() { return mb_initialized; }
 
-        private void ExecuteExcelAction(Action<XLWorkbook> action)
-        {
-            try
-            {
-                using (var workbook = new XLWorkbook(m_FileStr))
-                {
-                    action(workbook);
-                    workbook.Save();
-                }
-            }
-            catch (IOException)
-            {
-                Utils.LogAction("ERROR", "File Access Denied (File likely open in Excel)", m_CurrentUser, m_LogPath);
-                MessageBox.Show("The file is currently open in another program.");
-            }
-            catch (Exception ex)
-            {
-                Utils.LogAction("ERROR", ex.Message, m_CurrentUser, m_LogPath);
-                MessageBox.Show("Error: " + ex.Message);
-            }
-        }
-
-        public void LogAction(string action, string details)
-        {
-            try
-            {
-                string logEntry = $"[{DateTime.Now:MM/dd/yyyy HH:mm:ss}] User: {m_CurrentUser} | Action: {action} | Details: {details}";
-                File.AppendAllText(m_LogPath, logEntry + Environment.NewLine);
-            }
-            catch { /* Avoid crashing if logging fails */ }
-        }
-
 
         private void btnSendMailmerge_Click(object sender, EventArgs e)
         {

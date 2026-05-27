@@ -32,16 +32,6 @@ namespace PatientRegistrationApp
             mCurrentUser = currentUser;
         }
 
-        private void LogAction(string action, string details)
-        {
-            try
-            {
-                string logEntry = $"[{DateTime.Now:MM/dd/yyyy HH:mm:ss}] User: {mCurrentUser} | Action: {action} | Details: {details}";
-                File.AppendAllText(mLogPath, logEntry + Environment.NewLine);
-            }
-            catch { /* Fail silently to prevent app crash on logging error */ }
-        }
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();

@@ -32,16 +32,6 @@ namespace PatientRegistrationApp
             LoadPatientsFromExcel();
         }
 
-        // Helper method to write to the log file
-        private void LogAction(string action, string details)
-        {
-            try
-            {
-                string logEntry = $"[{DateTime.Now:MM/dd/yyyy HH:mm:ss}] User: {m_currentUser} | Action: {action} | Details: {details}";
-                File.AppendAllText(m_logPath, logEntry + Environment.NewLine);
-            }
-            catch { /* Fail silently */ }
-        }
 
         private void LoadPatientsFromExcel()
         {

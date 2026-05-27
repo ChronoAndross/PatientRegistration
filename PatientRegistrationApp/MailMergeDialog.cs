@@ -55,16 +55,6 @@ namespace PatientRegistrationApp
             m_currentUser = currentUser;
         }
 
-        private void LogAction(string action, string details)
-        {
-            try
-            {
-                string logEntry = $"[{DateTime.Now:MM/dd/yyyy HH:mm:ss}] User: {m_currentUser} | Action: {action} | Details: {details}";
-                File.AppendAllText(m_logPath, logEntry + Environment.NewLine);
-            }
-            catch { /* Fail silently */ }
-        }
-
         private List<string> GetSelectedMonths()
         {
             // Important: Ensure 'using System.Linq;' is at the top of your file
