@@ -32,6 +32,7 @@ namespace PatientRegistrationApp
         private string workSheetName = "Patient_Registration MASTER";
 
         // Locations constants (keeping your existing mapping)
+        private const int kCurrDateLoc = 1;
         private const int kFirstNameLoc = 2;
         private const int kLastNameLoc = 3;
         private const int kAddressLoc = 7;
@@ -68,6 +69,26 @@ namespace PatientRegistrationApp
         {
             // Important: Ensure 'using System.Linq;' is at the top of your file
             return comboDateSelection.SelectedItems.Cast<string>().ToList();
+        }
+
+        private string GetTimeSinceString(DateTime pastDate)
+        {
+            TimeSpan span = DateTime.Now - pastDate;
+
+            // Total days is a good baseline
+            double days = span.TotalDays;
+
+            if (days < 30)
+                return $"{(int)days} days";
+
+            if (days < 365)
+            {
+                int months = (int)(days / 30.44); // Average month length
+                return months == 1 ? "1 month" : $"{months} months";
+            }
+
+            int years = (int)(days / 365.25);
+            return years == 1 ? "1 year" : $"{years} years";
         }
 
         private void MailMergeDialog_Load(object sender, EventArgs e)
@@ -154,6 +175,15 @@ namespace PatientRegistrationApp
                         // --- THE MULTI-MONTH CHECK ---
                         if (selectedMonths.Contains(rowMonthYear))
                         {
+
+                            string timeSinceText = "some time"; // Default fallback
+                            var lastExamCellValue = row.Cell(kCurrDateLoc).Value;
+
+                            if (lastExamCellValue.IsDateTime)
+                            {
+                                timeSinceText = GetTimeSinceString(lastExamCellValue.GetDateTime());
+                            }
+
                             string firstName = row.Cell(kFirstNameLoc).Value.ToString();
                             string lastName = row.Cell(kLastNameLoc).Value.ToString();
                             string address = row.Cell(kAddressLoc).Value.ToString();
@@ -168,7 +198,7 @@ namespace PatientRegistrationApp
                                 $"Glen Burnie, MD 21061\v" +
                                 $"410-768-8214\r\r" +
                                 $"Dear {firstName},\r\r" +
-                                "We want you back! Our records show that it has been _____________ " +
+                                $"We want you back! Our records show that it has been {timeSinceText} " +
                                 "since your last eye exam. Please call our office to make an " +
                                 "appointment at your convenience. We'd love to see you again.";
 
