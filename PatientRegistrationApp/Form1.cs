@@ -48,7 +48,7 @@ namespace PatientRegistrationApp
                     return;
                 }
             }
-            LogAction("SESSION_START", $"User logged in at {DateTime.Now}");
+            Utils.LogAction("SESSION_START", $"User logged in at {DateTime.Now}", m_CurrentUser, m_LogPath);
 
 
             m_FileStr = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Patient Registration.xlsx");
@@ -93,14 +93,14 @@ namespace PatientRegistrationApp
                     workbook.Save();
                 }
             }
-            catch (IOException ioEx)
+            catch (IOException)
             {
-                LogAction("ERROR", "File Access Denied (File likely open in Excel)");
+                Utils.LogAction("ERROR", "File Access Denied (File likely open in Excel)", m_CurrentUser, m_LogPath);
                 MessageBox.Show("The file is currently open in another program.");
             }
             catch (Exception ex)
             {
-                LogAction("ERROR", ex.Message);
+                Utils.LogAction("ERROR", ex.Message, m_CurrentUser, m_LogPath);
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
@@ -132,7 +132,7 @@ namespace PatientRegistrationApp
         {
             Form addPatientDialog = new AddPatientDialog(m_FileStr, m_CurrentUser);
             addPatientDialog.ShowDialog();
-            LogAction("NAVIGATE", "Opened Add Patient Dialog");
+            Utils.LogAction("NAVIGATE", "Opened Add Patient Dialog", m_CurrentUser, m_LogPath);
         }
 
 

@@ -11,8 +11,8 @@ using StringBuilder = System.Text.StringBuilder;
 using Word = Microsoft.Office.Interop.Word;
 
 /*
-* The MailMergeDialog class does the following:
-* 1. Query all available return dates from the excel file.
+* 1. Query all available return dates from the excel file.* The MailMergeDialog class does the following:
+
 * 2. After date is selected, we query all patients associated with this return date.
 * 3. Take each row (assuming one patient per row) and format it in a new Word document using Mailmerge API.
 * 4. Open newly created document in Word.
@@ -127,7 +127,7 @@ namespace PatientRegistrationApp
             }
             catch (Exception ex)
             {
-                LogAction("ERROR", $"Failed to load MailMerge months: {ex.Message}");
+                Utils.LogAction("ERROR", $"Failed to load MailMerge months: {ex.Message}", m_currentUser, m_logPath);
                 MessageBox.Show("Error loading months: " + ex.Message);
             }
             //comboDateSelection.Text = "--Select Month/Year--";
@@ -321,18 +321,18 @@ namespace PatientRegistrationApp
 
             // Log all selected months
             string monthDetails = string.Join(", ", selectedMonths);
-            LogAction("MAIL_MERGE_START", $"Generating labels for: {monthDetails}");
+            Utils.LogAction("MAIL_MERGE_START", $"Generating labels for: {monthDetails}", m_currentUser, m_logPath);
 
             try
             {
                 var wordApp = new Word.Application();
                 IteratePatientsForMailMerge(wordApp); 
                 wordApp.Visible = true;
-                LogAction("MAIL_MERGE_SUCCESS", $"Labels generated for {selectedMonths.Count} months.");
+                Utils.LogAction("MAIL_MERGE_SUCCESS", $"Labels generated for {selectedMonths.Count} months.", m_currentUser, m_logPath);
             }
             catch (Exception ex)
             {
-                LogAction("ERROR", $"Multi-month Mail Merge Failed: {ex.Message}");
+                Utils.LogAction("ERROR", $"Multi-month Mail Merge Failed: {ex.Message}", m_currentUser, m_logPath);
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
@@ -354,7 +354,7 @@ namespace PatientRegistrationApp
             }
 
             string logDetails = string.Join(", ", selectedMonths);
-            LogAction("POSTCARD_GEN_START", $"Generating postcards for: {logDetails}");
+            Utils.LogAction("POSTCARD_GEN_START", $"Generating postcards for: {logDetails}", m_currentUser, m_logPath);
 
             try
             {
@@ -362,12 +362,12 @@ namespace PatientRegistrationApp
                 IteratePatientsForPostcards(wordApp);
                 wordApp.Visible = true;
 
-                LogAction("POSTCARD_GEN_SUCCESS", $"Multi-month batch complete.");
+                Utils.LogAction("POSTCARD_GEN_SUCCESS", $"Multi-month batch complete.", m_currentUser, m_logPath);
                 this.Close();
             }
             catch (Exception ex)
             {
-                LogAction("ERROR", $"Postcard batch failed: {ex.Message}");
+                Utils.LogAction("ERROR", $"Postcard batch failed: {ex.Message}", m_currentUser, m_logPath);
                 MessageBox.Show("Error: " + ex.Message);
             }
         }

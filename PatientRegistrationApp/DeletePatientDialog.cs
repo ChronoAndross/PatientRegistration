@@ -68,7 +68,7 @@ namespace PatientRegistrationApp
             }
             catch (Exception ex)
             {
-                LogAction("ERROR", $"Failed to load patient list for deletion: {ex.Message}");
+                Utils.LogAction("ERROR", $"Failed to load patient list for deletion: {ex.Message}", m_currentUser, m_logPath);
                 MessageBox.Show("Unable to load patients: " + ex.Message);
             }
         }
@@ -128,7 +128,7 @@ namespace PatientRegistrationApp
 
                 if (confirm == DialogResult.No)
                 {
-                    LogAction("DELETE_CANCELLED", $"User declined deletion of: {selected.Name}");
+                    Utils.LogAction("DELETE_CANCELLED", $"User declined deletion of: {selected.Name}", m_currentUser, m_logPath);
                     return;
                 }
 
@@ -144,19 +144,19 @@ namespace PatientRegistrationApp
                     }
 
                     // 2. Log Success
-                    LogAction("RECORD_DELETED", $"Successfully removed patient: {selected.Name} (Original Row: {rowToDelete})");
+                    Utils.LogAction("RECORD_DELETED", $"Successfully removed patient: {selected.Name} (Original Row: {rowToDelete})", m_currentUser, m_logPath);
 
                     MessageBox.Show("Patient removed successfully.");
                     this.Close();
                 }
                 catch (IOException ex)
                 {
-                    LogAction("ERROR", $"Failed to delete {selected.Name}: File locked, error: {ex.Message}");
+                    Utils.LogAction("ERROR", $"Failed to delete {selected.Name}: File locked, error: {ex.Message}", m_currentUser, m_logPath);
                     MessageBox.Show("The file is open in another program. Please close it first.");
                 }
                 catch (Exception ex)
                 {
-                    LogAction("ERROR", $"Critical error during deletion of {selected.Name}: {ex.Message}");
+                    Utils.LogAction("ERROR", $"Critical error during deletion of {selected.Name}: {ex.Message}", m_currentUser, m_logPath);
                     MessageBox.Show("An error occurred: " + ex.Message);
                 }
             }

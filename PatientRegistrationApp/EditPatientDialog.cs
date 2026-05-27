@@ -208,7 +208,7 @@ namespace PatientRegistrationApp
                         : dateCell.Value.ToString();
                 }
             }
-            catch (Exception ex) { /* Handle error */ }
+            catch (Exception) { /* Handle error */ }
         }
 
         private void btnAccept_Click(object sender, EventArgs e)
@@ -242,20 +242,20 @@ namespace PatientRegistrationApp
 
                         workbook.Save();
 
-                        LogAction("RECORD_EDITED", $"Updated details for patient: {selected.Name} (Row {currRow})");
+                        Utils.LogAction("RECORD_EDITED", $"Updated details for patient: {selected.Name} (Row {currRow})", m_currentUser, m_logPath);
 
                         MessageBox.Show("Patient updated successfully!");
                         this.Close();
                     }
                 }
-                catch (IOException)
+                catch (IOException ex)
                 {
-                    LogAction("ERROR", $"Failed to edit {selected.Name}: File locked.");
+                    Utils.LogAction("ERROR", $"Failed to edit {selected.Name}: File locked, error: {ex.Message}", m_currentUser, m_logPath);
                     MessageBox.Show("Close the Excel file and try again.");
                 }
                 catch (Exception ex)
                 {
-                    LogAction("ERROR", $"Critical error editing {selected.Name}: {ex.Message}");
+                    Utils.LogAction("ERROR", $"Critical error editing {selected.Name}: {ex.Message}", m_currentUser, m_logPath);
                     MessageBox.Show("An error occurred: " + ex.Message);
                 }
             }
@@ -271,7 +271,7 @@ namespace PatientRegistrationApp
                 : "Something else has gone wrong. Please make sure the excel document is open.";
 
                 string errorType = dataValid.ToString();
-                LogAction("VALIDATION_FAILED", $"Edit failed for {(selected != null ? selected.Name : "Unknown")}. Reason: {errorType}");
+                Utils.LogAction("VALIDATION_FAILED", $"Edit failed for {(selected != null ? selected.Name : "Unknown")}. Reason: {errorType}", m_currentUser, m_logPath);
                 Form prompt = new AlertDialog(dialogText);
                 prompt.ShowDialog();
             }
