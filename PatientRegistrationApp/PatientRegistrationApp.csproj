@@ -14,7 +14,6 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <Applica
     <RootNamespace>PatientRegistrationApp</RootNamespace>
     <AssemblyName>PatientRegistrationApp</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -24,7 +23,8 @@
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>C:\Users\marna\Downloads\setup\</PublishUrl>
-    <Install>true</Install>tionRevision>9</ApplicationRevision>
+    <Install>true</Install>
+    <ApplicationRevision>9</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

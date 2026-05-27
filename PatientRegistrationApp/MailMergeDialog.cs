@@ -205,21 +205,6 @@ namespace PatientRegistrationApp
                         }
                     }
                 }
-
-                // Sort by Date naturally (descending) then fill the combo box
-                var sortedMonths = fMonthCounter.Keys
-                    .OrderByDescending(m => DateTime.Parse(m))
-                    .ToList();
-
-                comboDateSelection.Items.Clear();
-                foreach (var month in sortedMonths)
-                {
-                    comboDateSelection.Items.Add(month);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error loading months: " + ex.Message);
             }
         }
 
