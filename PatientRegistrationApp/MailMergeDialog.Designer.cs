@@ -87,6 +87,17 @@
             this.comboDateSelection.Size = new System.Drawing.Size(152, 82);
             this.comboDateSelection.TabIndex = 5;
             // 
+            // btnPrintPostcards
+            // 
+            this.btnPrintPostcards.Location = new System.Drawing.Point(173, 163);
+            this.btnPrintPostcards.Margin = new System.Windows.Forms.Padding(2);
+            this.btnPrintPostcards.Name = "btnPrintPostcards";
+            this.btnPrintPostcards.Size = new System.Drawing.Size(105, 31);
+            this.btnPrintPostcards.TabIndex = 4;
+            this.btnPrintPostcards.Text = "Send to Postcard";
+            this.btnPrintPostcards.UseVisualStyleBackColor = true;
+            this.btnPrintPostcards.Click += new System.EventHandler(this.btnPrintPostcards_Click);
+            // 
             // MailMergeDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

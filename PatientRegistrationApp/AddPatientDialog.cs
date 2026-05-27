@@ -60,6 +60,29 @@ namespace PatientRegistrationApp
             return false;
         }
 
+        private bool IsDuplicatePatient()
+        {
+            using (var workbook = new XLWorkbook(mFilePath))
+            {
+                var worksheet = workbook.Worksheet(workSheetName);
+                var rows = worksheet.RowsUsed().Skip(1); // Skip header
+
+                foreach (var row in rows)
+                {
+                    // Compare all 6 fields (Case-Insensitive)
+                    bool match = row.Cell(kFirstNameLoc).Value.ToString().Trim().Equals(textFirstName.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kLastNameLoc).Value.ToString().Trim().Equals(textLastName.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kAddressLoc).Value.ToString().Trim().Equals(textAddress.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kCityLoc).Value.ToString().Trim().Equals(textCity.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kStateLoc).Value.ToString().Trim().Equals(textState.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                                 row.Cell(kZipLoc).Value.ToString().Trim().Equals(textZip.Text.Trim(), StringComparison.OrdinalIgnoreCase);
+
+                    if (match) return true;
+                }
+            }
+            return false;
+        }
+
         private void SendDialogDataToExcel()
         {
             string patientName = $"{textFirstName.Text} {textLastName.Text}";
