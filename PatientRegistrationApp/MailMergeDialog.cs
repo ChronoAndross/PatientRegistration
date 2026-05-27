@@ -224,7 +224,7 @@ namespace PatientRegistrationApp
 
             // --- Avery 8387 Geometry ---
             outTable.Rows.HeightRule = Word.WdRowHeightRule.wdRowHeightExactly;
-            outTable.Rows.Height = inApp.InchesToPoints(5.5f); // Exactly half of an 11" sheet
+            outTable.Rows.Height = inApp.InchesToPoints(2.75f); // Exactly half of an 11" sheet
 
             outTable.Columns.Width = inApp.InchesToPoints(4.25f); // Exactly half of an 8.5" sheet
 
