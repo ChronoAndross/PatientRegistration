@@ -190,7 +190,7 @@ namespace PatientRegistrationApp
                                 $"Dear {firstName},\r\r" +
                                 $"We want you back! Our records show that it has been {timeSinceText} " +
                                 "since your last eye exam. Please call our office to make an " +
-                                "appointment at your convenience. We'd love to see you again.";
+                                "appointment at your convenience. We'd love to see you.";
 
                             cellRange.Text = postcardContent;
                             cellRange.Font.Name = "Arial";
